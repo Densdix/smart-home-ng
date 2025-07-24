@@ -1,6 +1,6 @@
-<nav class="sidebar">
+<nav class="sidebar" [class.mobile-hidden]="!isMobileMenuOpen">
   <div class="sidebar-header">
-    <button class="menu-toggle">
+    <button class="menu-toggle" (click)="toggleMobileMenu()">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
@@ -10,7 +10,7 @@
 
   <ul class="nav-menu">
     <li class="nav-item">
-      <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-link" (click)="closeMobileMenu()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="3" y="3" width="7" height="7" rx="1" fill="currentColor"/>
           <rect x="14" y="3" width="7" height="7" rx="1" fill="currentColor"/>
@@ -21,7 +21,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a routerLink="/about" routerLinkActive="active" class="nav-link">
+      <a routerLink="/about" routerLinkActive="active" class="nav-link" (click)="closeMobileMenu()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
           <path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -31,3 +31,8 @@
     </li>
   </ul>
 </nav>
+
+<!-- Mobile overlay -->
+<div class="mobile-overlay"
+     [class.visible]="isMobileMenuOpen"
+     (click)="closeMobileMenu()"></div>
