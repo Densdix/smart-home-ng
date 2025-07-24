@@ -1,0 +1,7 @@
+<div class="card-list">
+  <app-card
+    *ngFor="let card of cards; trackBy: trackByCardId"
+    [card]="card"
+    class="card-item">
+  </app-card>
+</div>

@@ -1,0 +1,51 @@
+.dashboard {
+  background-color: #000000;
+  min-height: 100vh;
+  color: #ffffff;
+}
+
+.dashboard-header {
+  padding: 24px 32px 0;
+  border-bottom: 1px solid #333;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  padding: 12px 24px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.tab-button:hover {
+  color: #ffffff;
+}
+
+.tab-button.active {
+  color: #ffffff;
+  border-bottom-color: #3b82f6;
+}
+
+.dashboard-content {
+  padding: 32px;
+}
+
+.dashboard h1 {
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.dashboard p {
+  color: #9ca3af;
+  font-size: 1.1rem;
+}

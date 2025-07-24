@@ -1,0 +1,27 @@
+<div class="device" [appHighlightActive]="device.state">
+  <div class="device-content" [ngClass]="{'single-layout': layout === 'single', 'multi-layout': layout === 'multi'}">
+    <div class="device-icon"
+         [class.active]="device.state"
+         (click)="layout === 'single' ? onToggle() : null"
+         (keydown.enter)="layout === 'single' ? onToggle() : null"
+         (keydown.space)="layout === 'single' ? onToggle() : null"
+         [attr.tabindex]="layout === 'single' ? 0 : -1"
+         [attr.role]="layout === 'single' ? 'button' : null"
+         [class.clickable]="layout === 'single'">
+      <span class="material-icons">{{ device.icon }}</span>
+    </div>
+
+    <div class="device-info">
+      <span class="device-label">{{ device.label }}</span>
+
+      <div class="device-control" *ngIf="layout === 'multi'">
+        <label class="switch">
+          <input type="checkbox"
+                 [checked]="device.state"
+                 (change)="onToggle()">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
