@@ -1,9 +1,9 @@
 import { Component, signal } from '@angular/core';
-import { Layout } from './layout/layout';
+import { LayoutComponent } from './layout/layout';
 
 @Component({
   selector: 'app-root',
-  imports: [Layout],
+  imports: [LayoutComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
