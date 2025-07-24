@@ -1,0 +1,30 @@
+<div class="card" [appHighlightActive]="hasActiveDevice">
+  <div class="card-header">
+    <h3 class="card-title">{{ card.title }}</h3>
+
+    <div class="group-toggle" *ngIf="hasGroupToggle">
+      <label class="switch">
+        <input type="checkbox"
+               [checked]="isGroupOn"
+               (change)="onGroupToggle()">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="card-content" [ngClass]="'layout-' + card.layout">
+    <ng-container *ngFor="let item of card.items; let i = index">
+      <app-device
+        *ngIf="isDevice(item)"
+        [device]="item"
+        [layout]="card.layout === 'singleDevice' ? 'single' : 'multi'"
+        (stateChange)="onDeviceStateChange(i, $event)">
+      </app-device>
+
+      <app-sensor
+        *ngIf="item.type === 'sensor'"
+        [sensor]="item">
+      </app-sensor>
+    </ng-container>
+  </div>
+</div>
