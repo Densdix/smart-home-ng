@@ -4,6 +4,7 @@ import {
   Input,
   OnChanges,
   Renderer2,
+  inject,
 } from '@angular/core';
 
 @Directive({
@@ -11,9 +12,9 @@ import {
   standalone: true,
 })
 export class HighlightActiveDirective implements OnChanges {
-  @Input() appHighlightActive: boolean = false;
-
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  @Input() appHighlightActive = false;
+  private el = inject(ElementRef);
+  private renderer = inject(Renderer2);
 
   ngOnChanges() {
     if (this.appHighlightActive) {

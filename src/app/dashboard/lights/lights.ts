@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Card } from '../../models/dashboard.models';
 import { DashboardService } from '../../services/dashboard.service';
@@ -13,8 +13,7 @@ import { CardListComponent } from '../../components/card-list/card-list';
 })
 export class Lights implements OnInit {
   cards: Card[] = [];
-
-  constructor(private dashboardService: DashboardService) {}
+  private dashboardService = inject(DashboardService);
 
   ngOnInit() {
     const tabData = this.dashboardService.getTabData('lights');

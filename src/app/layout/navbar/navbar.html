@@ -35,4 +35,9 @@
 <!-- Mobile overlay -->
 <div class="mobile-overlay"
      [class.visible]="isMobileMenuOpen"
-     (click)="closeMobileMenu()"></div>
+     (click)="closeMobileMenu()"
+     (keydown.enter)="closeMobileMenu()"
+     (keydown.space)="closeMobileMenu()"
+     tabindex="0"
+     role="button"
+     aria-label="Close mobile menu"></div>

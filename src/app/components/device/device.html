@@ -3,6 +3,10 @@
     <div class="device-icon"
          [class.active]="device.state"
          (click)="layout === 'single' ? onToggle() : null"
+         (keydown.enter)="layout === 'single' ? onToggle() : null"
+         (keydown.space)="layout === 'single' ? onToggle() : null"
+         [attr.tabindex]="layout === 'single' ? 0 : -1"
+         [attr.role]="layout === 'single' ? 'button' : null"
          [class.clickable]="layout === 'single'">
       <span class="material-icons">{{ device.icon }}</span>
     </div>
