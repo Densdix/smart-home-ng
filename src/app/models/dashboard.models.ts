@@ -35,3 +35,24 @@ export interface Tab {
 export interface DashboardData {
   tabs: Tab[];
 }
+
+// API Models
+export interface LoginRequest {
+  userName: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  token: string;
+}
+
+export interface UserProfile {
+  fullName: string;
+  initials: string;
+}
+
+export interface DashboardInfo {
+  id: string;
+  title: string;
+  icon: string;
+}
