@@ -1,23 +1,40 @@
 <div class="dashboard">
-  <div class="dashboard-header">
-    <div class="tabs">
-      <button
-        class="tab-button"
-        [class.active]="activeTab === 'overview'"
-        (click)="setActiveTab('overview')">
-        Overview
-      </button>
-      <button
-        class="tab-button"
-        [class.active]="activeTab === 'lights'"
-        (click)="setActiveTab('lights')">
-        Lights
-      </button>
+  @if (isLoading()) {
+    <div class="loading">
+      <p>Loading dashboard...</p>
     </div>
-  </div>
+  } @else if (error()) {
+    <div class="error">
+      <p>{{ error() }}</p>
+    </div>
+  } @else if (dashboardData()) {
+    @if (dashboardData()!.tabs.length > 0) {
+      <div class="dashboard-header">
+        <div class="tabs">
+          @for (tab of dashboardData()!.tabs; track tab.id) {
+            <button
+              class="tab-button"
+              [class.active]="activeTab()?.id === tab.id"
+              (click)="setActiveTab(tab.id)">
+              {{ tab.title }}
+            </button>
+          }
+        </div>
+      </div>
 
-  <div class="dashboard-content">
-    <app-overview *ngIf="activeTab === 'overview'"></app-overview>
-    <app-lights *ngIf="activeTab === 'lights'"></app-lights>
-  </div>
+      <div class="dashboard-content">
+        @if (activeTab(); as tab) {
+          <app-card-list [cards]="tab.cards"></app-card-list>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <p>This dashboard has no tabs available.</p>
+      </div>
+    }
+  } @else {
+    <div class="empty-state">
+      <p>You don't have any dashboards yet. They'll appear here as soon as you create them.</p>
+    </div>
+  }
 </div>

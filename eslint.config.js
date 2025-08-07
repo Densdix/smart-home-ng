@@ -44,6 +44,7 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
+      "@typescript-eslint/no-explicit-any": "error",
       "unicorn/better-regex": "error",
       "unicorn/catch-error-name": "error",
       "unicorn/consistent-destructuring": "error",

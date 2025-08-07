@@ -7,7 +7,7 @@ import { SensorValue } from '../models/dashboard.models';
 })
 export class SensorValuePipe implements PipeTransform {
   transform(value: SensorValue): string {
-    if (!value || value.amount === undefined || value.amount === null) {
+    if (!value || value.amount == null) {
       return '';
     }
 
