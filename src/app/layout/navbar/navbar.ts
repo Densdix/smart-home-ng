@@ -21,6 +21,7 @@ import { DashboardInfo, UserProfile } from '../../models/dashboard.models';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
+  private readonly MOBILE_BREAKPOINT = 768;
 
   isMobileMenuOpen = false;
   isAuthenticated = false;
@@ -85,7 +86,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   @HostListener('window:resize')
   onResize(): void {
-    if (window.innerWidth > 768) {
+    if (window.innerWidth > this.MOBILE_BREAKPOINT) {
       this.isMobileMenuOpen = false;
       this.isUserMenuOpen = false;
     }

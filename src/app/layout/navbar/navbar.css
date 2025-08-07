@@ -209,6 +209,7 @@
   visibility: visible;
 }
 
+/* Mobile breakpoint: 768px (keep in sync with MOBILE_BREAKPOINT in navbar.ts) */
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
