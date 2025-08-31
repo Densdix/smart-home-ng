@@ -4,7 +4,7 @@ import { AppState } from './index';
 import * as DashboardSelectors from './selectors/dashboard.selectors';
 import * as DashboardActions from './actions/dashboard.actions';
 import * as DeviceActions from './actions/device.actions';
-import { CardItem } from '../models/dashboard.models';
+import { CardItem, CardLayout } from '../models/dashboard.models';
 
 @Injectable({
   providedIn: 'root',
@@ -59,7 +59,7 @@ export class DashboardStore {
     this.store.dispatch(DashboardActions.updateTabTitle({ tabId, title }));
   }
 
-  addCard(tabId: string, layout: string) {
+  addCard(tabId: string, layout: CardLayout) {
     this.store.dispatch(DashboardActions.addCard({ tabId, layout }));
   }
 

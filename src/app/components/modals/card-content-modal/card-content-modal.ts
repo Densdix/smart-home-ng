@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { DeviceService } from '../../../services/device.service';
 import { ValidationService } from '../../../services/validation.service';
+import { ModalService } from '../../../services/modal.service';
 import {
   Card,
   CardItem,
@@ -26,6 +27,7 @@ export class CardContentModalComponent {
   private fb = inject(FormBuilder);
   private deviceService = inject(DeviceService);
   private validationService = inject(ValidationService);
+  private modalService = inject(ModalService);
 
   isVisible = signal(false);
   isLoading = signal(false);
@@ -55,6 +57,7 @@ export class CardContentModalComponent {
   }
 
   hide(): void {
+    this.modalService.closeCardContent();
     this.isVisible.set(false);
     this.currentCard = null;
     this.resetForm();
@@ -99,9 +102,14 @@ export class CardContentModalComponent {
       return;
     }
 
-    // Здесь будет вызов action для обновления заголовка карточки
-    // this.dashboardStore.updateCardTitle(tabId, cardId, title);
-    this.validationErrors.set({});
+    const tabId = this.modalService.getCurrentTabId();
+    const cardId = this.modalService.getCurrentCardId();
+
+    if (tabId && cardId) {
+      // Здесь будет вызов action для обновления заголовка карточки
+      // this.dashboardStore.updateCardTitle(tabId, cardId, title);
+      this.validationErrors.set({});
+    }
   }
 
   addItemToCard(): void {
@@ -125,18 +133,27 @@ export class CardContentModalComponent {
       return;
     }
 
-    // Здесь будет вызов action для добавления элемента в карточку
-    // this.dashboardStore.addItemToCard(tabId, cardId, selectedItem);
+    const tabId = this.modalService.getCurrentTabId();
+    const cardId = this.modalService.getCurrentCardId();
 
-    this.editForm.patchValue({ selectedItemId: '' });
-    this.validationErrors.set({});
+    if (tabId && cardId) {
+      // Здесь будет вызов action для добавления элемента в карточку
+      // this.dashboardStore.addItemToCard(tabId, cardId, selectedItem);
+      this.editForm.patchValue({ selectedItemId: '' });
+      this.validationErrors.set({});
+    }
   }
 
   removeItemFromCard(itemId: string): void {
     if (!this.currentCard) return;
 
-    // Здесь будет вызов action для удаления элемента из карточки
-    // this.dashboardStore.removeItemFromCard(tabId, cardId, itemId);
+    const tabId = this.modalService.getCurrentTabId();
+    const cardId = this.modalService.getCurrentCardId();
+
+    if (tabId && cardId) {
+      // Здесь будет вызов action для удаления элемента из карточки
+      // this.dashboardStore.removeItemFromCard(tabId, cardId, itemId);
+    }
   }
 
   getFieldError(field: string): string | null {

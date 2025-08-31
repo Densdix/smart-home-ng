@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CARD_LAYOUTS, CardLayout } from '../../../models/dashboard.models';
+import { ModalService } from '../../../services/modal.service';
 
 @Component({
   selector: 'app-card-layout-modal',
@@ -10,6 +11,8 @@ import { CARD_LAYOUTS, CardLayout } from '../../../models/dashboard.models';
   styleUrls: ['./card-layout-modal.css'],
 })
 export class CardLayoutModalComponent {
+  private modalService = inject(ModalService);
+
   isVisible = signal(false);
   selectedLayout = signal<CardLayout | null>(null);
 
@@ -40,6 +43,7 @@ export class CardLayoutModalComponent {
   }
 
   hide(): void {
+    this.modalService.closeCardLayout();
     this.isVisible.set(false);
     this.selectedLayout.set(null);
   }
@@ -48,10 +52,12 @@ export class CardLayoutModalComponent {
     this.selectedLayout.set(layout);
   }
 
-  confirmSelection(): CardLayout | null {
+  confirmSelection(): void {
     const layout = this.selectedLayout();
-    this.hide();
-    return layout;
+    if (layout) {
+      this.modalService.addCardWithLayout(layout);
+      this.hide();
+    }
   }
 
   getLayoutIcon(layoutId: string): string {

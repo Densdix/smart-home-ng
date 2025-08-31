@@ -6,9 +6,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
-import { DashboardListService } from '../../../services/dashboard-list.service';
 import { ValidationService } from '../../../services/validation.service';
+import { ModalService } from '../../../services/modal.service';
 import {
   DashboardInfo,
   DASHBOARD_ICONS,
@@ -23,9 +22,8 @@ import {
 })
 export class CreateDashboardModalComponent {
   private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private dashboardListService = inject(DashboardListService);
   private validationService = inject(ValidationService);
+  private modalService = inject(ModalService);
 
   isVisible = signal(false);
   isLoading = signal(false);
@@ -55,6 +53,7 @@ export class CreateDashboardModalComponent {
   }
 
   hide(): void {
+    this.modalService.closeCreateDashboard();
     this.isVisible.set(false);
     this.resetForm();
   }
@@ -68,7 +67,7 @@ export class CreateDashboardModalComponent {
     this.validationErrors.set({});
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.createForm.invalid) {
       this.markFormGroupTouched();
       return;
@@ -97,19 +96,15 @@ export class CreateDashboardModalComponent {
       icon: formValue.icon,
     };
 
-    this.dashboardListService.createDashboard(dashboard).subscribe({
-      next: () => {
-        this.hide();
-        this.router.navigate(['/dashboard', dashboard.id, 'main']);
-      },
-      error: (error) => {
-        console.error('Error creating dashboard:', error);
-        this.validationErrors.set({ general: 'Ошибка при создании дашборда' });
-      },
-      complete: () => {
-        this.isLoading.set(false);
-      },
-    });
+    try {
+      await this.modalService.createDashboard(dashboard);
+      this.hide();
+    } catch (error) {
+      console.error('Error creating dashboard:', error);
+      this.validationErrors.set({ general: 'Ошибка при создании дашборда' });
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   private markFormGroupTouched(): void {

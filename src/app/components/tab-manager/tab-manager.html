@@ -1,0 +1,151 @@
+<div class="tab-manager" *ngIf="isEditMode$()">
+  <div class="tab-controls">
+    <button
+      type="button"
+      class="btn-add-tab"
+      (click)="addTab()"
+      title="Добавить вкладку"
+    >
+      <span class="material-icons">add</span>
+      Добавить вкладку
+    </button>
+  </div>
+
+  <div class="tabs-container">
+    <div
+      *ngFor="let tab of tabs$ | async; trackBy: trackByTabId"
+      class="tab-item"
+    >
+      <!-- Tab Header -->
+      <div class="tab-header">
+        <div class="tab-title-section">
+          <div *ngIf="!isTabEditing(tab.id)" class="tab-title">
+            {{ tab.title }}
+          </div>
+
+          <div *ngIf="isTabEditing(tab.id)" class="tab-edit-form">
+            <input
+              type="text"
+              [value]="editingTabTitle()"
+              (input)="editingTabTitle.set($any($event.target).value)"
+              (keyup.enter)="saveTabTitle(tab)"
+              (keyup.escape)="cancelEditTab()"
+              class="tab-title-input"
+              [class.invalid]="getFieldError('title')"
+              maxlength="50"
+            />
+            <div class="error-message" *ngIf="getFieldError('title')">
+              {{ getFieldError('title') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-actions">
+          <!-- Edit Tab Title -->
+          <button
+            *ngIf="!isTabEditing(tab.id)"
+            type="button"
+            class="btn-edit-tab"
+            (click)="startEditTab(tab)"
+            title="Редактировать название"
+          >
+            <span class="material-icons">edit</span>
+          </button>
+
+          <!-- Save/Cancel Tab Title -->
+          <div *ngIf="isTabEditing(tab.id)" class="edit-actions">
+            <button
+              type="button"
+              class="btn-save-tab"
+              (click)="saveTabTitle(tab)"
+              title="Сохранить"
+            >
+              <span class="material-icons">check</span>
+            </button>
+            <button
+              type="button"
+              class="btn-cancel-tab"
+              (click)="cancelEditTab()"
+              title="Отменить"
+            >
+              <span class="material-icons">close</span>
+            </button>
+          </div>
+
+          <!-- Tab Controls -->
+          <div class="tab-controls">
+            <!-- Move Left -->
+            <button
+              type="button"
+              class="btn-move-tab"
+              [disabled]="getTabIndex(tab) === 1"
+              (click)="reorderTab(tab.id, 'left')"
+              title="Переместить влево"
+            >
+              <span class="material-icons">chevron_left</span>
+            </button>
+
+            <!-- Move Right -->
+            <button
+              type="button"
+              class="btn-move-tab"
+              [disabled]="getTabIndex(tab) === (tabs$ | async)?.length"
+              (click)="reorderTab(tab.id, 'right')"
+              title="Переместить вправо"
+            >
+              <span class="material-icons">chevron_right</span>
+            </button>
+
+            <!-- Add Card -->
+            <button
+              type="button"
+              class="btn-add-card"
+              (click)="openCardLayout(tab.id)"
+              title="Добавить карточку"
+            >
+              <span class="material-icons">add_card</span>
+            </button>
+
+            <!-- Remove Tab -->
+            <button
+              type="button"
+              class="btn-remove-tab"
+              (click)="removeTab(tab.id)"
+              title="Удалить вкладку"
+            >
+              <span class="material-icons">delete</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content Preview -->
+      <div class="tab-content-preview">
+        <div class="cards-count">
+          {{ tab.cards.length }} карточек
+        </div>
+
+        <div class="cards-preview" *ngIf="tab.cards.length > 0">
+          <div
+            *ngFor="let card of tab.cards.slice(0, 3)"
+            class="card-preview"
+            [class]="'layout-' + card.layout"
+          >
+            <span class="material-icons">dashboard</span>
+            <span class="card-title">{{ card.title || 'Без названия' }}</span>
+            <span class="card-items">{{ card.items.length }} элементов</span>
+          </div>
+
+          <div *ngIf="tab.cards.length > 3" class="more-cards">
+            +{{ tab.cards.length - 3 }} ещё
+          </div>
+        </div>
+
+        <div *ngIf="tab.cards.length === 0" class="no-cards">
+          <span class="material-icons">inbox</span>
+          <span>Нет карточек</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
