@@ -29,7 +29,7 @@ export class CreateDashboardModalComponent {
 
   isVisible = signal(false);
   isLoading = signal(false);
-  validationErrors = signal<{ [key: string]: string }>({});
+  validationErrors = signal<Record<string, string>>({});
 
   createForm: FormGroup;
   availableIcons = DASHBOARD_ICONS;
@@ -41,7 +41,7 @@ export class CreateDashboardModalComponent {
         [
           Validators.required,
           Validators.maxLength(30),
-          Validators.pattern(/^[a-zA-Z0-9-_]+$/),
+          Validators.pattern(/^[\w-]+$/),
         ],
       ],
       title: ['', [Validators.required, Validators.maxLength(50)]],
@@ -82,7 +82,7 @@ export class CreateDashboardModalComponent {
     );
 
     if (!validation.isValid) {
-      const errors: { [key: string]: string } = {};
+      const errors: Record<string, string> = {};
       validation.errors.forEach((error) => {
         errors[error.field] = error.message;
       });

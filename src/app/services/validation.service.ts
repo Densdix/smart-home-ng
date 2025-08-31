@@ -22,7 +22,7 @@ export class ValidationService {
         field: 'id',
         message: 'ID не может быть длиннее 30 символов',
       });
-    } else if (!/^[a-zA-Z0-9-_]+$/.test(id)) {
+    } else if (!/^[\w-]+$/.test(id)) {
       errors.push({
         field: 'id',
         message:
