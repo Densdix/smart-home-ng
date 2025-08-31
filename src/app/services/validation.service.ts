@@ -1,85 +1,53 @@
 import { Injectable } from '@angular/core';
 import {
-  FormValidationResult,
   ValidationError,
+  FormValidationResult,
 } from '../models/dashboard.models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ValidationService {
-  validateDashboardCreation(
-    id: string,
-    title: string,
-    icon: string
-  ): FormValidationResult {
-    const errors: ValidationError[] = [];
-
-    if (!id || id.trim() === '') {
-      errors.push({ field: 'id', message: 'ID обязателен' });
-    } else if (id.length > 30) {
-      errors.push({
-        field: 'id',
-        message: 'ID не может быть длиннее 30 символов',
-      });
-    } else if (!/^[\w-]+$/.test(id)) {
-      errors.push({
-        field: 'id',
-        message:
-          'ID может содержать только буквы, цифры, дефисы и подчеркивания',
-      });
-    }
-
-    if (!title || title.trim() === '') {
-      errors.push({ field: 'title', message: 'Название обязательно' });
-    } else if (title.length > 50) {
-      errors.push({
-        field: 'title',
-        message: 'Название не может быть длиннее 50 символов',
-      });
-    }
-
-    if (!icon || icon.trim() === '') {
-      errors.push({ field: 'icon', message: 'Иконка обязательна' });
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
-  }
-
   validateTabCreation(
     title: string,
-    existingTabs: string[]
+    existingTitles: string[]
   ): FormValidationResult {
     const errors: ValidationError[] = [];
 
-    if (!title || title.trim() === '') {
-      errors.push({ field: 'title', message: 'Название вкладки обязательно' });
-    } else if (title.length > 50) {
+    if (!title || title.trim().length === 0) {
       errors.push({
         field: 'title',
-        message: 'Название вкладки не может быть длиннее 50 символов',
+        message: 'Название вкладки не может быть пустым',
       });
-    } else if (existingTabs.includes(title.trim())) {
+    }
+
+    if (title && title.trim().length < 2) {
+      errors.push({
+        field: 'title',
+        message: 'Название вкладки должно содержать минимум 2 символа',
+      });
+    }
+
+    if (title && title.trim().length > 50) {
+      errors.push({
+        field: 'title',
+        message: 'Название вкладки не может превышать 50 символов',
+      });
+    }
+
+    if (title && existingTitles.includes(title.trim())) {
       errors.push({
         field: 'title',
         message: 'Вкладка с таким названием уже существует',
       });
     }
 
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
-  }
-
-  validateCardCreation(layout: string): FormValidationResult {
-    const errors: ValidationError[] = [];
-
-    if (!layout) {
-      errors.push({ field: 'layout', message: 'Выберите тип макета карточки' });
+    if (title && /["*/:<>?\\|]/.test(title)) {
+      errors.push({
+        field: 'title',
+        message:
+          'Название не может содержать специальные символы: < > : " / \\ | ? *',
+      });
     }
 
     return {
@@ -91,10 +59,32 @@ export class ValidationService {
   validateCardTitle(title: string): FormValidationResult {
     const errors: ValidationError[] = [];
 
-    if (title && title.length > 50) {
+    if (!title || title.trim().length === 0) {
       errors.push({
         field: 'title',
-        message: 'Название карточки не может быть длиннее 50 символов',
+        message: 'Название карточки не может быть пустым',
+      });
+    }
+
+    if (title && title.trim().length < 2) {
+      errors.push({
+        field: 'title',
+        message: 'Название карточки должно содержать минимум 2 символа',
+      });
+    }
+
+    if (title && title.trim().length > 100) {
+      errors.push({
+        field: 'title',
+        message: 'Название карточки не может превышать 100 символов',
+      });
+    }
+
+    if (title && /["*/:<>?\\|]/.test(title)) {
+      errors.push({
+        field: 'title',
+        message:
+          'Название не может содержать специальные символы: < > : " / \\ | ? *',
       });
     }
 
@@ -104,8 +94,152 @@ export class ValidationService {
     };
   }
 
-  getFieldError(errors: ValidationError[], field: string): string | null {
-    const error = errors.find((e) => e.field === field);
-    return error ? error.message : null;
+  validateDashboardCreation(
+    id: string,
+    title: string,
+    icon: string
+  ): FormValidationResult {
+    const errors: ValidationError[] = [];
+
+    if (!id || id.trim().length === 0) {
+      errors.push({
+        field: 'id',
+        message: 'ID дашборда не может быть пустым',
+      });
+    }
+
+    if (id && id.trim().length < 3) {
+      errors.push({
+        field: 'id',
+        message: 'ID дашборда должен содержать минимум 3 символа',
+      });
+    }
+
+    if (id && id.trim().length > 30) {
+      errors.push({
+        field: 'id',
+        message: 'ID дашборда не может превышать 30 символов',
+      });
+    }
+
+    if (id && !/^[\dA-Za-z-]+$/.test(id)) {
+      errors.push({
+        field: 'id',
+        message: 'ID может содержать только буквы, цифры и дефисы',
+      });
+    }
+
+    if (!title || title.trim().length === 0) {
+      errors.push({
+        field: 'title',
+        message: 'Название дашборда не может быть пустым',
+      });
+    }
+
+    if (title && title.trim().length < 3) {
+      errors.push({
+        field: 'title',
+        message: 'Название дашборда должно содержать минимум 3 символа',
+      });
+    }
+
+    if (title && title.trim().length > 100) {
+      errors.push({
+        field: 'title',
+        message: 'Название дашборда не может превышать 100 символов',
+      });
+    }
+
+    if (!icon || icon.trim().length === 0) {
+      errors.push({
+        field: 'icon',
+        message: 'Иконка дашборда не может быть пустой',
+      });
+    }
+
+    if (title && /["*/:<>?\\|]/.test(title)) {
+      errors.push({
+        field: 'title',
+        message:
+          'Название не может содержать специальные символы: < > : " / \\ | ? *',
+      });
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors,
+    };
+  }
+
+  validateCardContent(items: unknown[]): FormValidationResult {
+    const errors: ValidationError[] = [];
+
+    if (!items || items.length === 0) {
+      errors.push({
+        field: 'items',
+        message: 'Карточка должна содержать хотя бы один элемент',
+      });
+    }
+
+    if (items && items.length > 20) {
+      errors.push({
+        field: 'items',
+        message: 'Карточка не может содержать более 20 элементов',
+      });
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors,
+    };
+  }
+
+  validateDeviceLabel(label: string): FormValidationResult {
+    const errors: ValidationError[] = [];
+
+    if (!label || label.trim().length === 0) {
+      errors.push({
+        field: 'label',
+        message: 'Название устройства не может быть пустым',
+      });
+    }
+
+    if (label && label.trim().length < 2) {
+      errors.push({
+        field: 'label',
+        message: 'Название устройства должно содержать минимум 2 символа',
+      });
+    }
+
+    if (label && label.trim().length > 50) {
+      errors.push({
+        field: 'label',
+        message: 'Название устройства не может превышать 50 символов',
+      });
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors,
+    };
+  }
+
+  validateForm(
+    formData: Record<string, unknown>,
+    validationRules: Record<string, (value: unknown) => FormValidationResult>
+  ): FormValidationResult {
+    const allErrors: ValidationError[] = [];
+
+    for (const [field, validator] of Object.entries(validationRules)) {
+      const result = validator(formData[field]);
+      if (!result.isValid) {
+        allErrors.push(...result.errors);
+      }
+    }
+
+    return {
+      isValid: allErrors.length === 0,
+      errors: allErrors,
+    };
   }
 }

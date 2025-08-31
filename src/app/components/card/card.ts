@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Card, Device, CardItem } from '../../models/dashboard.models';
 import { DeviceComponent } from '../device/device';
@@ -6,6 +6,7 @@ import { SensorComponent } from '../sensor/sensor';
 import { HighlightActiveDirective } from '../../directives/highlight-active.directive';
 import { FilterDevicesPipe } from '../../pipes/filter-devices.pipe';
 import { HasActiveDevicePipe } from '../../pipes/has-active-device.pipe';
+import { DashboardStore } from '../../store/dashboard.store';
 
 @Component({
   selector: 'app-card',
@@ -24,6 +25,8 @@ import { HasActiveDevicePipe } from '../../pipes/has-active-device.pipe';
 export class CardComponent {
   @Input() card!: Card;
 
+  private dashboardStore = inject(DashboardStore);
+
   hasGroupToggle(devices: Device[]): boolean {
     return devices.length >= 2;
   }
@@ -35,14 +38,14 @@ export class CardComponent {
   onDeviceStateChange(index: number, newState: boolean): void {
     const item = this.card.items[index];
     if (item.type === 'device') {
-      item.state = newState;
+      this.dashboardStore.toggleDeviceState(item.id, newState);
     }
   }
 
   onGroupToggle(devices: Device[]): void {
     const targetState = !this.isGroupOn(devices);
     devices.forEach((device) => {
-      device.state = targetState;
+      this.dashboardStore.toggleDeviceState(device.id, targetState);
     });
   }
 

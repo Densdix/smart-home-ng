@@ -1,50 +1,70 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
-import { DeviceService } from '../../services/device.service';
+import { map, mergeMap, catchError, withLatestFrom } from 'rxjs/operators';
+import { AppState } from '../state/app.state';
 import * as DeviceActions from '../actions/device.actions';
+import * as DashboardActions from '../actions/dashboard.actions';
+import { DeviceService } from '../../services/device.service';
+import { Device, Sensor } from '../../models/dashboard.models';
 
 @Injectable()
 export class DeviceEffects {
   private actions$ = inject(Actions);
+  private store = inject(Store<AppState>);
   private deviceService = inject(DeviceService);
 
-  toggleDeviceState$ = createEffect(() =>
+  loadDevices$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(DeviceActions.toggleDeviceState),
-      switchMap(({ deviceId, newState }) =>
-        this.deviceService.updateDeviceState(deviceId, newState).pipe(
-          map((device) => DeviceActions.toggleDeviceStateSuccess({ device })),
+      ofType(DeviceActions.loadDevices),
+      mergeMap(() =>
+        this.deviceService.getAvailableDevices().pipe(
+          map((devices) => DeviceActions.loadDevicesSuccess({ devices })),
           catchError((error) =>
-            of(
-              DeviceActions.toggleDeviceStateFailure({
-                deviceId,
-                error: error.message,
-              })
-            )
+            of(DeviceActions.loadDevicesFailure({ error: error.message }))
           )
         )
       )
     )
   );
 
-  loadAvailableDevices$ = createEffect(() =>
+  toggleDeviceState$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(DeviceActions.loadAvailableDevices),
-      switchMap(() =>
-        this.deviceService.getAvailableDevices().pipe(
-          map((devices) =>
-            DeviceActions.loadAvailableDevicesSuccess({ devices })
+      ofType(DeviceActions.toggleDeviceState),
+      withLatestFrom(this.store.select((state) => state.device.devices)),
+      mergeMap(([{ deviceId, newState }, devices]) => {
+        const device = devices.find(
+          (d: Device | Sensor) => d.id === deviceId && d.type === 'device'
+        ) as Device;
+        if (!device) {
+          return of(
+            DeviceActions.toggleDeviceStateFailure({
+              error: 'Device not found',
+            })
+          );
+        }
+
+        return this.deviceService.updateDeviceState(deviceId, newState).pipe(
+          map((updatedDevice: Device) =>
+            DeviceActions.toggleDeviceStateSuccess({ device: updatedDevice })
           ),
           catchError((error) =>
-            of(
-              DeviceActions.loadAvailableDevicesFailure({
-                error: error.message,
-              })
-            )
+            of(DeviceActions.toggleDeviceStateFailure({ error: error.message }))
           )
-        )
+        );
+      })
+    )
+  );
+
+  syncDeviceWithDashboard$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DeviceActions.toggleDeviceStateSuccess),
+      map(({ device }) =>
+        DashboardActions.syncDeviceStateInDashboard({
+          deviceId: device.id,
+          newState: device.state,
+        })
       )
     )
   );

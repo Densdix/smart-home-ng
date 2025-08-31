@@ -209,7 +209,6 @@
   visibility: visible;
 }
 
-/* Mobile breakpoint: 768px (keep in sync with MOBILE_BREAKPOINT in navbar.ts) */
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
@@ -231,5 +230,46 @@
 
   .menu-toggle {
     display: none;
+  }
+}
+
+.add-dashboard-section {
+  margin-top: auto;
+  padding: 1rem 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.add-dashboard-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-dashboard-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.add-dashboard-btn:active {
+  transform: translateY(0);
+}
+
+.add-dashboard-btn .material-icons {
+  font-size: 1.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .add-dashboard-section {
+    border-top-color: var(--border-color-dark);
   }
 }

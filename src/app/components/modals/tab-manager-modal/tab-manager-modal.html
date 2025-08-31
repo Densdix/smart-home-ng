@@ -1,0 +1,99 @@
+<div class="modal-overlay" *ngIf="isVisible()" (click)="hide()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Управление вкладками</h2>
+      <button class="close-btn" (click)="hide()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="add-tab-section">
+        <h3>Добавить вкладку</h3>
+        <form [formGroup]="addTabForm" (ngSubmit)="onAddTab()">
+          <div class="form-group">
+            <label for="tabTitle">Название вкладки:</label>
+            <input
+              id="tabTitle"
+              type="text"
+              formControlName="title"
+              placeholder="Введите название вкладки"
+              [class.error]="isFieldInvalid('title')"
+            />
+            <div class="error-message" *ngIf="getFieldError('title')">
+              {{ getFieldError('title') }}
+            </div>
+          </div>
+          <button
+            type="submit"
+            [disabled]="addTabForm.invalid || isLoading()"
+          >
+            {{ isLoading() ? 'Добавление...' : 'Добавить вкладку' }}
+          </button>
+        </form>
+      </div>
+
+      <div class="existing-tabs-section">
+        <h3>Существующие вкладки</h3>
+        <div class="tabs-list" *ngIf="tabs().length > 0; else noTabs">
+          <div
+            class="tab-item"
+            *ngFor="let tab of tabs(); trackBy: trackByTabId"
+          >
+            <div class="tab-info">
+              <span class="tab-title">{{ tab.title }}</span>
+              <span class="tab-cards-count"
+                >{{ tab.cards.length }} карточек</span
+              >
+            </div>
+            <div class="tab-actions">
+              <button
+                class="edit-btn"
+                (click)="startEditTab(tab)"
+                [disabled]="editingTabId() === tab.id"
+              >
+                Редактировать
+              </button>
+              <button
+                class="delete-btn"
+                (click)="removeTab(tab.id)"
+                [disabled]="tabs().length <= 1"
+              >
+                Удалить
+              </button>
+            </div>
+
+            <div class="edit-form" *ngIf="editingTabId() === tab.id">
+              <form
+                [formGroup]="editTabForm"
+                (ngSubmit)="onUpdateTab(tab.id)"
+              >
+                <div class="form-group">
+                  <input
+                    type="text"
+                    formControlName="title"
+                    placeholder="Новое название"
+                    [class.error]="isFieldInvalid('title')"
+                  />
+                  <div class="error-message" *ngIf="getFieldError('title')">
+                    {{ getFieldError('title') }}
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" [disabled]="editTabForm.invalid">
+                    Сохранить
+                  </button>
+                  <button type="button" (click)="cancelEdit()">
+                    Отмена
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noTabs>
+          <p class="no-tabs-message">Вкладки отсутствуют</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,105 +1,161 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { DashboardListService } from './dashboard-list.service';
+import { DashboardInfo } from '../models/dashboard.models';
 import { DashboardStore } from '../store/dashboard.store';
-import { DashboardInfo, CardLayout } from '../models/dashboard.models';
+import { DashboardListService } from './dashboard-list.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModalService {
-  private router = inject(Router);
-  private dashboardListService = inject(DashboardListService);
   private dashboardStore = inject(DashboardStore);
+  private dashboardListService = inject(DashboardListService);
 
-  // Signals для управления модальными окнами
-  private _showCreateDashboard = signal(false);
-  private _showCardLayout = signal(false);
-  private _showCardContent = signal(false);
+  private _createDashboardModalVisible = signal(false);
+  private _cardLayoutModalVisible = signal(false);
+  private _cardContentModalVisible = signal(false);
+  private _tabManagerModalVisible = signal(false);
+  private _cardManagerModalVisible = signal(false);
 
-  // Readonly signals для компонентов
-  showCreateDashboard = this._showCreateDashboard.asReadonly();
-  showCardLayout = this._showCardLayout.asReadonly();
-  showCardContent = this._showCardContent.asReadonly();
+  createDashboardModalVisible = this._createDashboardModalVisible.asReadonly();
+  cardLayoutModalVisible = this._cardLayoutModalVisible.asReadonly();
+  cardContentModalVisible = this._cardContentModalVisible.asReadonly();
+  tabManagerModalVisible = this._tabManagerModalVisible.asReadonly();
+  cardManagerModalVisible = this._cardManagerModalVisible.asReadonly();
 
-  // Данные для модальных окон
-  private _currentTabId = signal<string | null>(null);
-  private _currentCardId = signal<string | null>(null);
-  currentTabId = this._currentTabId.asReadonly();
-  currentCardId = this._currentCardId.asReadonly();
+  private _currentTabIdForCard = signal<string>('');
+  currentTabIdForCard = this._currentTabIdForCard.asReadonly();
 
-  // Методы для управления модальными окнами
-  openCreateDashboard(): void {
-    this._showCreateDashboard.set(true);
+  private _currentCardForContent = signal<{
+    card: import('../models/dashboard.models').Card;
+    tabId: string;
+  } | null>(null);
+  currentCardForContent = this._currentCardForContent.asReadonly();
+
+  showCreateDashboardModal(): void {
+    this._createDashboardModalVisible.set(true);
   }
 
-  closeCreateDashboard(): void {
-    this._showCreateDashboard.set(false);
+  closeCreateDashboardModal(): void {
+    this._createDashboardModalVisible.set(false);
   }
 
-  openCardLayout(tabId: string): void {
-    this._currentTabId.set(tabId);
-    this._showCardLayout.set(true);
+  showCardLayoutModal(tabId: string): void {
+    this._currentTabIdForCard.set(tabId);
+    this._cardLayoutModalVisible.set(true);
   }
 
-  closeCardLayout(): void {
-    this._showCardLayout.set(false);
-    this._currentTabId.set(null);
+  closeCardLayoutModal(): void {
+    this._cardLayoutModalVisible.set(false);
+    this._currentTabIdForCard.set('');
   }
 
-  openCardContent(tabId: string, cardId: string): void {
-    this._currentTabId.set(tabId);
-    this._currentCardId.set(cardId);
-    this._showCardContent.set(true);
+  showCardContentModal(
+    card: import('../models/dashboard.models').Card,
+    tabId: string
+  ): void {
+    this._currentCardForContent.set({ card, tabId });
+    this._cardContentModalVisible.set(true);
   }
 
-  closeCardContent(): void {
-    this._showCardContent.set(false);
-    this._currentTabId.set(null);
-    this._currentCardId.set(null);
+  closeCardContentModal(): void {
+    this._cardContentModalVisible.set(false);
+    this._currentCardForContent.set(null);
   }
 
-  // Методы для работы с данными
-  async createDashboard(dashboard: DashboardInfo): Promise<void> {
+  showTabManagerModal(): void {
+    this._tabManagerModalVisible.set(true);
+  }
+
+  closeTabManagerModal(): void {
+    this._tabManagerModalVisible.set(false);
+  }
+
+  showCardManagerModal(): void {
+    this._cardManagerModalVisible.set(true);
+  }
+
+  closeCardManagerModal(): void {
+    this._cardManagerModalVisible.set(false);
+  }
+
+  async createDashboard(dashboardInfo: DashboardInfo): Promise<void> {
     try {
-      await this.dashboardListService.createDashboard(dashboard).toPromise();
-      this.closeCreateDashboard();
-      this.router.navigate(['/dashboard', dashboard.id, 'main']);
+      this.dashboardStore.createDashboard(dashboardInfo);
+
+      this.closeCreateDashboardModal();
     } catch (error) {
       console.error('Error creating dashboard:', error);
       throw error;
     }
   }
 
-  async deleteDashboard(dashboardId: string): Promise<void> {
-    try {
-      await this.dashboardListService.deleteDashboard(dashboardId).toPromise();
-      const firstDashboard = this.dashboardListService.getFirstDashboard();
-      if (firstDashboard) {
-        this.router.navigate(['/dashboard', firstDashboard.id, 'main']);
-      } else {
-        this.router.navigate(['/']);
-      }
-    } catch (error) {
-      console.error('Error deleting dashboard:', error);
-      throw error;
-    }
+  addTab(title: string): void {
+    this.dashboardStore.addTab(title);
+    this.closeTabManagerModal();
   }
 
-  addCardWithLayout(layout: CardLayout): void {
-    const tabId = this._currentTabId();
-    if (tabId) {
-      this.dashboardStore.addCard(tabId, layout);
-      this.closeCardLayout();
-    }
+  removeTab(tabId: string): void {
+    this.dashboardStore.removeTab(tabId);
   }
 
-  // Получение текущих данных
-  getCurrentTabId(): string | null {
-    return this._currentTabId();
+  updateTabTitle(tabId: string, title: string): void {
+    this.dashboardStore.updateTabTitle(tabId, title);
   }
 
-  getCurrentCardId(): string | null {
-    return this._currentCardId();
+  reorderTab(tabId: string, direction: 'left' | 'right'): void {
+    this.dashboardStore.reorderTab(tabId, direction);
+  }
+
+  addCard(tabId: string, layout: string): void {
+    this.dashboardStore.addCard(
+      tabId,
+      layout as 'singleDevice' | 'horizontalLayout' | 'verticalLayout'
+    );
+    this.closeCardLayoutModal();
+  }
+
+  removeCard(tabId: string, cardId: string): void {
+    this.dashboardStore.removeCard(tabId, cardId);
+  }
+
+  updateCardTitle(tabId: string, cardId: string, title: string): void {
+    this.dashboardStore.updateCardTitle(tabId, cardId, title);
+  }
+
+  reorderCard(tabId: string, cardId: string, newIndex: number): void {
+    this.dashboardStore.reorderCard(tabId, cardId, newIndex);
+  }
+
+  addItemToCard(
+    tabId: string,
+    cardId: string,
+    item: import('../models/dashboard.models').CardItem
+  ): void {
+    this.dashboardStore.addItemToCard(tabId, cardId, item);
+    this.closeCardContentModal();
+  }
+
+  removeItemFromCard(tabId: string, cardId: string, itemId: string): void {
+    this.dashboardStore.removeItemFromCard(tabId, cardId, itemId);
+  }
+
+  enterEditMode(): void {
+    this.dashboardStore.enterEditMode();
+  }
+
+  exitEditMode(): void {
+    this.dashboardStore.exitEditMode();
+  }
+
+  saveDashboard(dashboardId: string): void {
+    this.dashboardStore.saveDashboard(dashboardId);
+  }
+
+  discardChanges(): void {
+    this.dashboardStore.discardChanges();
+  }
+
+  toggleDeviceState(deviceId: string, newState: boolean): void {
+    this.dashboardStore.toggleDeviceState(deviceId, newState);
   }
 }

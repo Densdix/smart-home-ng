@@ -2,45 +2,44 @@
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h2>Выберите макет карточки</h2>
-      <button class="close-button" (click)="hide()" type="button">
-        <span class="close-icon">×</span>
-      </button>
+      <button class="close-btn" (click)="hide()">&times;</button>
     </div>
 
     <div class="modal-body">
-      <div class="layout-options">
+      <div class="layouts-list">
         <div
+          class="layout-item"
           *ngFor="let layout of availableLayouts"
-          class="layout-option"
           [class.selected]="selectedLayout() === layout.id"
           (click)="selectLayout(layout.id)"
         >
-          <div class="layout-icon">
-            <span class="material-icons">{{ layout.icon }}</span>
-          </div>
-          <div class="layout-info">
-            <h3>{{ layout.title }}</h3>
-            <p>{{ layout.description }}</p>
-          </div>
-          <div class="layout-preview">
-            <div class="preview-item" [class]="'preview-' + layout.id"></div>
+          <div class="layout-header">
+            <div class="layout-icon">
+              <i class="material-icons">{{ layout.icon }}</i>
+            </div>
+            <div>
+              <h3 class="layout-title">{{ layout.title }}</h3>
+              <p class="layout-description">{{ layout.description }}</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="modal-footer">
-      <button type="button" class="btn-secondary" (click)="hide()">
-        Отмена
-      </button>
-      <button
-        type="button"
-        class="btn-primary"
-        [disabled]="!selectedLayout()"
-        (click)="confirmSelection()"
-      >
-        Выбрать
-      </button>
+      <div class="modal-actions">
+        <button
+          class="btn btn-secondary"
+          (click)="hide()"
+        >
+          Отмена
+        </button>
+        <button
+          class="btn btn-primary"
+          [disabled]="!selectedLayout()"
+          (click)="confirmSelection()"
+        >
+          Создать карточку
+        </button>
+      </div>
     </div>
   </div>
 </div>

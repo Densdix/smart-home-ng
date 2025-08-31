@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CARD_LAYOUTS, CardLayout } from '../../../models/dashboard.models';
 import { ModalService } from '../../../services/modal.service';
+import { DashboardStore } from '../../../store/dashboard.store';
 
 @Component({
   selector: 'app-card-layout-modal',
@@ -12,6 +13,7 @@ import { ModalService } from '../../../services/modal.service';
 })
 export class CardLayoutModalComponent {
   private modalService = inject(ModalService);
+  private dashboardStore = inject(DashboardStore);
 
   isVisible = signal(false);
   selectedLayout = signal<CardLayout | null>(null);
@@ -43,7 +45,7 @@ export class CardLayoutModalComponent {
   }
 
   hide(): void {
-    this.modalService.closeCardLayout();
+    this.modalService.closeCardLayoutModal();
     this.isVisible.set(false);
     this.selectedLayout.set(null);
   }
@@ -54,8 +56,10 @@ export class CardLayoutModalComponent {
 
   confirmSelection(): void {
     const layout = this.selectedLayout();
-    if (layout) {
-      this.modalService.addCardWithLayout(layout);
+    const tabId = this.modalService.currentTabIdForCard();
+
+    if (layout && tabId) {
+      this.dashboardStore.addCard(tabId, layout);
       this.hide();
     }
   }

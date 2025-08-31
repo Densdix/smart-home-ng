@@ -1,10 +1,18 @@
-import { ActionReducerMap } from '@ngrx/store';
-import { DashboardState, dashboardReducer } from './reducers/dashboard.reducer';
+// Store Configuration
+export { reducers } from './reducers';
+export type { AppState } from './state/app.state';
+export { initialAppState } from './state/app.state';
 
-export interface AppState {
-  dashboard: DashboardState;
-}
+// Store Services
+export { DashboardStore } from './dashboard.store';
 
-export const reducers: ActionReducerMap<AppState> = {
-  dashboard: dashboardReducer,
-};
+// Actions
+export * from './actions/dashboard.actions';
+export * from './actions/dashboard-list.actions';
+export * from './actions/device.actions';
+
+// Selectors
+export * from './selectors';
+
+// Effects
+export * from './effects';

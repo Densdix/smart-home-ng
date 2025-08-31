@@ -9,6 +9,7 @@ import {
 import { DeviceService } from '../../../services/device.service';
 import { ValidationService } from '../../../services/validation.service';
 import { ModalService } from '../../../services/modal.service';
+import { DashboardStore } from '../../../store/dashboard.store';
 import {
   Card,
   CardItem,
@@ -28,6 +29,7 @@ export class CardContentModalComponent {
   private deviceService = inject(DeviceService);
   private validationService = inject(ValidationService);
   private modalService = inject(ModalService);
+  private dashboardStore = inject(DashboardStore);
 
   isVisible = signal(false);
   isLoading = signal(false);
@@ -36,6 +38,8 @@ export class CardContentModalComponent {
 
   editForm: FormGroup;
   currentCard: Card | null = null;
+  currentTabId: string | null = null;
+  currentCardId: string | null = null;
 
   hasItems = computed(() => (this.currentCard?.items?.length ?? 0) > 0);
 
@@ -46,8 +50,10 @@ export class CardContentModalComponent {
     });
   }
 
-  show(card: Card): void {
+  show(card: Card, tabId: string): void {
     this.currentCard = card;
+    this.currentTabId = tabId;
+    this.currentCardId = card.id;
     this.isVisible.set(true);
     this.loadAvailableDevices();
     this.editForm.patchValue({
@@ -57,9 +63,11 @@ export class CardContentModalComponent {
   }
 
   hide(): void {
-    this.modalService.closeCardContent();
+    this.modalService.closeCardContentModal();
     this.isVisible.set(false);
     this.currentCard = null;
+    this.currentTabId = null;
+    this.currentCardId = null;
     this.resetForm();
   }
 
@@ -88,7 +96,7 @@ export class CardContentModalComponent {
   }
 
   updateCardTitle(): void {
-    if (!this.currentCard) return;
+    if (!this.currentCard || !this.currentTabId || !this.currentCardId) return;
 
     const title = this.editForm.get('title')?.value;
     const validation = this.validationService.validateCardTitle(title);
@@ -102,18 +110,16 @@ export class CardContentModalComponent {
       return;
     }
 
-    const tabId = this.modalService.getCurrentTabId();
-    const cardId = this.modalService.getCurrentCardId();
-
-    if (tabId && cardId) {
-      // Здесь будет вызов action для обновления заголовка карточки
-      // this.dashboardStore.updateCardTitle(tabId, cardId, title);
-      this.validationErrors.set({});
-    }
+    this.dashboardStore.updateCardTitle(
+      this.currentTabId,
+      this.currentCardId,
+      title
+    );
+    this.validationErrors.set({});
   }
 
   addItemToCard(): void {
-    if (!this.currentCard) return;
+    if (!this.currentCard || !this.currentTabId || !this.currentCardId) return;
 
     const selectedItemId = this.editForm.get('selectedItemId')?.value;
     if (!selectedItemId) {
@@ -133,27 +139,23 @@ export class CardContentModalComponent {
       return;
     }
 
-    const tabId = this.modalService.getCurrentTabId();
-    const cardId = this.modalService.getCurrentCardId();
-
-    if (tabId && cardId) {
-      // Здесь будет вызов action для добавления элемента в карточку
-      // this.dashboardStore.addItemToCard(tabId, cardId, selectedItem);
-      this.editForm.patchValue({ selectedItemId: '' });
-      this.validationErrors.set({});
-    }
+    this.dashboardStore.addItemToCard(
+      this.currentTabId,
+      this.currentCardId,
+      selectedItem
+    );
+    this.editForm.patchValue({ selectedItemId: '' });
+    this.validationErrors.set({});
   }
 
   removeItemFromCard(itemId: string): void {
-    if (!this.currentCard) return;
+    if (!this.currentCard || !this.currentTabId || !this.currentCardId) return;
 
-    const tabId = this.modalService.getCurrentTabId();
-    const cardId = this.modalService.getCurrentCardId();
-
-    if (tabId && cardId) {
-      // Здесь будет вызов action для удаления элемента из карточки
-      // this.dashboardStore.removeItemFromCard(tabId, cardId, itemId);
-    }
+    this.dashboardStore.removeItemFromCard(
+      this.currentTabId,
+      this.currentCardId,
+      itemId
+    );
   }
 
   getFieldError(field: string): string | null {
@@ -186,5 +188,22 @@ export class CardContentModalComponent {
 
   getItemTypeLabel(item: CardItem): string {
     return item.type === 'device' ? 'Устройство' : 'Сенсор';
+  }
+
+  getLayoutLabel(layout: string): string {
+    switch (layout) {
+      case 'singleDevice':
+        return 'Одно устройство';
+      case 'horizontalLayout':
+        return 'Горизонтальный';
+      case 'verticalLayout':
+        return 'Вертикальный';
+      default:
+        return 'Неизвестно';
+    }
+  }
+
+  trackByItemId(index: number, item: CardItem): string {
+    return item.id;
   }
 }

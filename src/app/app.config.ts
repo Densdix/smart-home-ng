@@ -13,6 +13,7 @@ import { routes } from './app.routes';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { reducers } from './store';
 import { DashboardEffects } from './store/effects/dashboard.effects';
+import { DashboardListEffects } from './store/effects/dashboard-list.effects';
 import { DeviceEffects } from './store/effects/device.effects';
 
 export const appConfig: ApplicationConfig = {
@@ -22,7 +23,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideStore(reducers),
-    provideEffects([DashboardEffects, DeviceEffects]),
+    provideEffects([DashboardEffects, DashboardListEffects, DeviceEffects]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: false,

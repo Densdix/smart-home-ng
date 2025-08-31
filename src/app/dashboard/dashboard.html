@@ -8,29 +8,47 @@
       <p>{{ error() }}</p>
     </div>
   } @else if (dashboardData()) {
-    @if (dashboardData()!.tabs.length > 0) {
-      <div class="dashboard-header">
-        <div class="tabs">
-          @for (tab of dashboardData()!.tabs; track tab.id) {
-            <button
-              class="tab-button"
-              [class.active]="activeTab()?.id === tab.id"
-              (click)="setActiveTab(tab.id)">
-              {{ tab.title }}
-            </button>
+    @if (isEditMode$ | async) {
+      <app-dashboard-editor></app-dashboard-editor>
+    } @else {
+      @if (dashboardData()!.tabs.length > 0) {
+        <div class="dashboard-header">
+          <div class="dashboard-title-section">
+            <h1 class="dashboard-title">{{ getCurrentDashboardTitle() }}</h1>
+            <div class="dashboard-actions">
+              <button class="action-btn edit-btn" (click)="enterEditMode()" title="Редактировать дашборд">
+                <span class="material-icons">edit</span>
+                Редактировать
+              </button>
+              <button class="action-btn delete-btn" (click)="confirmDeleteDashboard()" title="Удалить дашборд">
+                <span class="material-icons">delete</span>
+                Удалить
+              </button>
+            </div>
+          </div>
+
+          <div class="tabs">
+            @for (tab of dashboardData()!.tabs; track tab.id) {
+              <button
+                class="tab-button"
+                [class.active]="activeTab()?.id === tab.id"
+                (click)="setActiveTab(tab.id)">
+                {{ tab.title }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="dashboard-content">
+          @if (activeTab(); as tab) {
+            <app-card-list [cards]="tab.cards"></app-card-list>
           }
         </div>
-      </div>
-
-      <div class="dashboard-content">
-        @if (activeTab(); as tab) {
-          <app-card-list [cards]="tab.cards"></app-card-list>
-        }
-      </div>
-    } @else {
-      <div class="empty-state">
-        <p>This dashboard has no tabs available.</p>
-      </div>
+      } @else {
+        <div class="empty-state">
+          <p>This dashboard has no tabs available.</p>
+        </div>
+      }
     }
   } @else {
     <div class="empty-state">

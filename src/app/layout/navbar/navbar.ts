@@ -10,6 +10,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
+import { ModalService } from '../../services/modal.service';
 import { DashboardInfo, UserProfile } from '../../models/dashboard.models';
 
 @Component({
@@ -21,6 +22,7 @@ import { DashboardInfo, UserProfile } from '../../models/dashboard.models';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
+  private modalService = inject(ModalService);
   private readonly MOBILE_BREAKPOINT = 768;
 
   isMobileMenuOpen = false;
@@ -81,6 +83,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authService.logout();
+    this.closeMobileMenu();
+  }
+
+  openCreateDashboardModal(): void {
+    this.modalService.showCreateDashboardModal();
     this.closeMobileMenu();
   }
 

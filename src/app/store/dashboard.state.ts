@@ -1,4 +1,4 @@
-import { DashboardData, DashboardInfo } from '../models/dashboard.models';
+import { DashboardData } from '../models/dashboard.models';
 
 export interface DashboardState {
   selectedDashboard: DashboardData | null;

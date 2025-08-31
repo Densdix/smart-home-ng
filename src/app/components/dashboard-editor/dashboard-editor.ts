@@ -1,6 +1,7 @@
 import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardStore } from '../../store/dashboard.store';
+import { ModalService } from '../../services/modal.service';
 import { EditModeControllerComponent } from '../edit-mode-controller/edit-mode-controller';
 import { TabManagerComponent } from '../tab-manager/tab-manager';
 import { CardManagerComponent } from '../card-manager/card-manager';
@@ -26,14 +27,15 @@ import { DashboardData, Tab, Card } from '../../models/dashboard.models';
 })
 export class DashboardEditorComponent {
   private dashboardStore = inject(DashboardStore);
+  private modalService = inject(ModalService);
 
-  isEditMode$ = this.dashboardStore.isEditMode;
+  isEditMode = this.dashboardStore.isEditMode;
   selectedDashboard$ = this.dashboardStore.selectedDashboard$;
   dashboardLoading$ = this.dashboardStore.dashboardLoading$;
   dashboardError$ = this.dashboardStore.dashboardError$;
 
-  showEditComponents = computed(() => this.isEditMode$());
-  showViewMode = computed(() => !this.isEditMode$());
+  showEditComponents = computed(() => this.isEditMode());
+  showViewMode = computed(() => !this.isEditMode());
   hasDashboard = computed(() => false);
 
   getDashboardTitle(): string {
@@ -96,7 +98,15 @@ export class DashboardEditorComponent {
   }
 
   createNewDashboard(): void {
-    // Здесь будет вызов ModalService для открытия модального окна создания дашборда
-    // Пока оставляем пустым, так как ModalService еще не интегрирован
+    this.modalService.showCreateDashboardModal();
+  }
+
+  confirmDeleteDashboard(): void {
+    const confirmed = confirm(
+      'Вы уверены, что хотите удалить этот дашборд? Это действие нельзя отменить.'
+    );
+    if (confirmed) {
+      console.log('Dashboard deletion confirmed');
+    }
   }
 }

@@ -1,5 +1,4 @@
 <div class="dashboard-editor">
-  <!-- Header -->
   <div class="dashboard-header">
     <div class="dashboard-info">
       <div class="dashboard-icon">
@@ -25,10 +24,8 @@
     </div>
   </div>
 
-  <!-- Edit Mode Controller -->
   <app-edit-mode-controller></app-edit-mode-controller>
 
-  <!-- Loading State -->
   <div *ngIf="dashboardLoading$ | async" class="loading-state">
     <div class="loading-spinner">
       <div class="spinner"></div>
@@ -36,7 +33,6 @@
     </div>
   </div>
 
-  <!-- Error State -->
   <div *ngIf="dashboardError$ | async" class="error-state">
     <div class="error-content">
       <span class="material-icons">error</span>
@@ -46,9 +42,7 @@
     </div>
   </div>
 
-  <!-- Dashboard Content -->
   <div *ngIf="(selectedDashboard$ | async) && !(dashboardLoading$ | async) && !(dashboardError$ | async)" class="dashboard-content">
-    <!-- View Mode -->
     <div *ngIf="showViewMode()" class="view-mode">
       <div class="view-mode-content">
         <div class="view-mode-info">
@@ -57,7 +51,6 @@
           <p>Для редактирования дашборда нажмите кнопку "Редактировать" выше</p>
         </div>
 
-        <!-- Dashboard Preview -->
         <div class="dashboard-preview">
           <div class="preview-tabs">
             <div *ngFor="let tab of (selectedDashboard$ | async)?.tabs" class="preview-tab">
@@ -75,17 +68,13 @@
       </div>
     </div>
 
-    <!-- Edit Mode -->
     <div *ngIf="showEditComponents()" class="edit-mode">
-      <!-- Tab Manager -->
       <app-tab-manager></app-tab-manager>
 
-      <!-- Card Manager -->
       <app-card-manager></app-card-manager>
     </div>
   </div>
 
-  <!-- Empty State -->
   <div *ngIf="!(selectedDashboard$ | async) && !(dashboardLoading$ | async) && !(dashboardError$ | async)" class="empty-state">
     <div class="empty-content">
       <span class="material-icons">dashboard</span>
@@ -98,7 +87,6 @@
     </div>
   </div>
 
-  <!-- Modals -->
   <app-create-dashboard-modal></app-create-dashboard-modal>
   <app-card-layout-modal></app-card-layout-modal>
   <app-card-content-modal></app-card-content-modal>

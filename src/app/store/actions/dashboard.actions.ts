@@ -1,14 +1,9 @@
 import { createAction, props } from '@ngrx/store';
 import {
   DashboardData,
-  Card,
-  Tab,
   CardItem,
+  CardLayout,
 } from '../../models/dashboard.models';
-
-// Edit Mode Actions
-export const enterEditMode = createAction('[Dashboard] Enter Edit Mode');
-export const exitEditMode = createAction('[Dashboard] Exit Edit Mode');
 
 // Dashboard Loading Actions
 export const loadDashboard = createAction(
@@ -25,6 +20,27 @@ export const loadDashboardFailure = createAction(
   '[Dashboard] Load Dashboard Failure',
   props<{ error: string }>()
 );
+
+// Dashboard Saving Actions
+export const saveDashboard = createAction(
+  '[Dashboard] Save Dashboard',
+  props<{ dashboardId: string }>()
+);
+
+export const saveDashboardSuccess = createAction(
+  '[Dashboard] Save Dashboard Success',
+  props<{ dashboard: DashboardData }>()
+);
+
+export const saveDashboardFailure = createAction(
+  '[Dashboard] Save Dashboard Failure',
+  props<{ error: string }>()
+);
+
+// Edit Mode Actions
+export const enterEditMode = createAction('[Dashboard] Enter Edit Mode');
+export const exitEditMode = createAction('[Dashboard] Exit Edit Mode');
+export const discardChanges = createAction('[Dashboard] Discard Changes');
 
 // Tab Management Actions
 export const addTab = createAction(
@@ -50,7 +66,7 @@ export const updateTabTitle = createAction(
 // Card Management Actions
 export const addCard = createAction(
   '[Dashboard] Add Card',
-  props<{ tabId: string; layout: string }>()
+  props<{ tabId: string; layout: CardLayout }>()
 );
 
 export const removeCard = createAction(
@@ -68,7 +84,7 @@ export const updateCardTitle = createAction(
   props<{ tabId: string; cardId: string; title: string }>()
 );
 
-// Card Content Management Actions
+// Card Content Actions
 export const addItemToCard = createAction(
   '[Dashboard] Add Item To Card',
   props<{ tabId: string; cardId: string; item: CardItem }>()
@@ -79,19 +95,40 @@ export const removeItemFromCard = createAction(
   props<{ tabId: string; cardId: string; itemId: string }>()
 );
 
-// Save/Discard Actions
-export const saveDashboard = createAction(
-  '[Dashboard] Save Dashboard',
-  props<{ dashboardId: string }>()
+// Dashboard Creation Actions
+export const createDashboard = createAction(
+  '[Dashboard] Create Dashboard',
+  props<{ dashboardInfo: { id: string; title: string; icon: string } }>()
 );
 
-export const saveDashboardSuccess = createAction(
-  '[Dashboard] Save Dashboard Success'
+export const createDashboardSuccess = createAction(
+  '[Dashboard] Create Dashboard Success',
+  props<{ dashboard: DashboardData; dashboardId: string }>()
 );
 
-export const saveDashboardFailure = createAction(
-  '[Dashboard] Save Dashboard Failure',
+export const createDashboardFailure = createAction(
+  '[Dashboard] Create Dashboard Failure',
   props<{ error: string }>()
 );
 
-export const discardChanges = createAction('[Dashboard] Discard Changes');
+// Dashboard Deletion Actions
+export const deleteDashboard = createAction(
+  '[Dashboard] Delete Dashboard',
+  props<{ dashboardId: string }>()
+);
+
+export const deleteDashboardSuccess = createAction(
+  '[Dashboard] Delete Dashboard Success',
+  props<{ dashboardId: string }>()
+);
+
+export const deleteDashboardFailure = createAction(
+  '[Dashboard] Delete Dashboard Failure',
+  props<{ error: string }>()
+);
+
+// Device State Sync Actions
+export const syncDeviceStateInDashboard = createAction(
+  '[Dashboard] Sync Device State',
+  props<{ deviceId: string; newState: boolean }>()
+);

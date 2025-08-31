@@ -1,6 +1,6 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from './index';
+import { AppState } from './state/app.state';
 import * as DashboardSelectors from './selectors/dashboard.selectors';
 import * as DashboardActions from './actions/dashboard.actions';
 import * as DeviceActions from './actions/device.actions';
@@ -11,9 +11,6 @@ import { CardItem, CardLayout } from '../models/dashboard.models';
 })
 export class DashboardStore {
   private store = inject(Store<AppState>);
-
-  private _isEditMode = signal(false);
-  isEditMode = this._isEditMode.asReadonly();
 
   selectedDashboard$ = this.store.select(
     DashboardSelectors.selectSelectedDashboard
@@ -26,16 +23,19 @@ export class DashboardStore {
   hasUnsavedChanges$ = this.store.select(
     DashboardSelectors.selectHasUnsavedChanges
   );
+  isEditMode$ = this.store.select(DashboardSelectors.selectIsEditMode);
 
-  isEditModeComputed = computed(() => this._isEditMode());
+  isEditMode = computed(() => {
+    let isEdit = false;
+    this.isEditMode$.subscribe((mode) => (isEdit = mode)).unsubscribe();
+    return isEdit;
+  });
 
   enterEditMode() {
-    this._isEditMode.set(true);
     this.store.dispatch(DashboardActions.enterEditMode());
   }
 
   exitEditMode() {
-    this._isEditMode.set(false);
     this.store.dispatch(DashboardActions.exitEditMode());
   }
 
@@ -103,5 +103,17 @@ export class DashboardStore {
     this.store.dispatch(
       DeviceActions.toggleDeviceState({ deviceId, newState })
     );
+  }
+
+  createDashboard(dashboardInfo: { id: string; title: string; icon: string }) {
+    this.store.dispatch(DashboardActions.createDashboard({ dashboardInfo }));
+  }
+
+  deleteDashboard(dashboardId: string) {
+    this.store.dispatch(DashboardActions.deleteDashboard({ dashboardId }));
+  }
+
+  loadDevices() {
+    this.store.dispatch(DeviceActions.loadDevices());
   }
 }

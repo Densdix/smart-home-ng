@@ -1,5 +1,6 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { DashboardStore } from '../../store/dashboard.store';
 import { ModalService } from '../../services/modal.service';
 
@@ -13,23 +14,35 @@ import { ModalService } from '../../services/modal.service';
 export class EditModeControllerComponent {
   private dashboardStore = inject(DashboardStore);
   private modalService = inject(ModalService);
+  private route = inject(ActivatedRoute);
 
-  // Signals
-  isEditMode$ = this.dashboardStore.isEditMode;
+  isEditMode$ = this.dashboardStore.isEditMode$;
   hasUnsavedChanges$ = this.dashboardStore.hasUnsavedChanges$;
   dashboardLoading$ = this.dashboardStore.dashboardLoading$;
   dashboardError$ = this.dashboardStore.dashboardError$;
 
-  // Computed values
-  showSaveButton = computed(
-    () => this.isEditMode$() && this.hasUnsavedChanges$()
-  );
+  isEditMode = computed(() => {
+    let editMode = false;
+    this.isEditMode$.subscribe((mode) => (editMode = mode)).unsubscribe();
+    return editMode;
+  });
 
-  showDiscardButton = computed(
-    () => this.isEditMode$() && this.hasUnsavedChanges$()
-  );
+  showSaveButton = computed(() => {
+    let hasChanges = false;
+    this.hasUnsavedChanges$
+      .subscribe((changes) => (hasChanges = changes))
+      .unsubscribe();
+    return this.isEditMode() && hasChanges;
+  });
 
-  // Methods
+  showDiscardButton = computed(() => {
+    let hasChanges = false;
+    this.hasUnsavedChanges$
+      .subscribe((changes) => (hasChanges = changes))
+      .unsubscribe();
+    return this.isEditMode() && hasChanges;
+  });
+
   enterEditMode(): void {
     this.dashboardStore.enterEditMode();
   }
@@ -39,7 +52,6 @@ export class EditModeControllerComponent {
   }
 
   saveDashboard(): void {
-    // Получаем ID текущего дашборда из URL или store
     const currentDashboardId = this.getCurrentDashboardId();
     if (currentDashboardId) {
       this.dashboardStore.saveDashboard(currentDashboardId);
@@ -51,33 +63,26 @@ export class EditModeControllerComponent {
   }
 
   createNewDashboard(): void {
-    this.modalService.openCreateDashboard();
+    this.modalService.showCreateDashboardModal();
   }
 
   private getCurrentDashboardId(): string | null {
-    // Здесь должна быть логика получения ID текущего дашборда
-    // Пока возвращаем null, так как это будет реализовано позже
-    return null;
+    const params = this.route.snapshot.params;
+    return params['dashboardId'] || null;
   }
 
   getStatusIcon(): string {
-    if (this.dashboardLoading$()) return 'hourglass_empty';
-    if (this.dashboardError$()) return 'error';
-    if (this.isEditMode$()) return 'edit';
+    if (this.isEditMode()) return 'edit';
     return 'visibility';
   }
 
   getStatusText(): string {
-    if (this.dashboardLoading$()) return 'Загрузка...';
-    if (this.dashboardError$()) return 'Ошибка загрузки';
-    if (this.isEditMode$()) return 'Режим редактирования';
+    if (this.isEditMode()) return 'Режим редактирования';
     return 'Просмотр';
   }
 
   getStatusColor(): string {
-    if (this.dashboardLoading$()) return 'loading';
-    if (this.dashboardError$()) return 'error';
-    if (this.isEditMode$()) return 'editing';
+    if (this.isEditMode()) return 'editing';
     return 'viewing';
   }
 }

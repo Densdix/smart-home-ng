@@ -1,48 +1,46 @@
 .tab-manager {
-  background: #f8f9fa;
+  background: white;
   border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tab-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
   padding: 20px;
-  margin-bottom: 20px;
-}
-
-.tab-controls {
-  margin-bottom: 20px;
-}
-
-.btn-add-tab {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
 }
 
-.btn-add-tab:hover {
-  background-color: #218838;
+.tab-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
 }
 
-.btn-add-tab .material-icons {
-  font-size: 18px;
+.tab-actions {
+  display: flex;
+  gap: 10px;
 }
 
-.tabs-container {
+.tab-content {
+  padding: 20px;
+}
+
+.tabs-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 15px;
 }
 
 .tab-item {
-  background: white;
-  border: 2px solid #e0e0e0;
+  border: 1px solid #e9ecef;
   border-radius: 8px;
-  overflow: hidden;
+  padding: 20px;
+  background-color: #fafafa;
   transition: all 0.2s;
 }
 
@@ -51,281 +49,365 @@
   box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
 }
 
-.tab-item.active {
-  border-color: #007bff;
-  box-shadow: 0 2px 12px rgba(0, 123, 255, 0.2);
-}
-
-.tab-header {
+.tab-header-info {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #e0e0e0;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
-.tab-title-section {
-  flex: 1;
-  min-width: 0;
-}
-
-.tab-title {
-  font-size: 16px;
+.tab-name {
+  font-size: 1.1rem;
   font-weight: 600;
   color: #333;
-  margin: 0;
 }
 
-.tab-edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.tab-title-input {
-  padding: 8px 12px;
-  border: 2px solid #007bff;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 600;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.tab-title-input:focus {
-  outline: none;
-  border-color: #0056b3;
-}
-
-.tab-title-input.invalid {
-  border-color: #dc3545;
-}
-
-.error-message {
+.tab-index {
+  background-color: #007bff;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
   font-size: 12px;
-  color: #dc3545;
-  margin: 0;
-}
-
-.tab-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-edit-tab,
-.btn-save-tab,
-.btn-cancel-tab {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-edit-tab {
-  background-color: #6c757d;
-  color: white;
-}
-
-.btn-edit-tab:hover {
-  background-color: #545b62;
-}
-
-.btn-save-tab {
-  background-color: #28a745;
-  color: white;
-}
-
-.btn-save-tab:hover {
-  background-color: #218838;
-}
-
-.btn-cancel-tab {
-  background-color: #dc3545;
-  color: white;
-}
-
-.btn-cancel-tab:hover {
-  background-color: #c82333;
-}
-
-.edit-actions {
-  display: flex;
-  gap: 4px;
+  font-weight: 500;
 }
 
 .tab-controls {
   display: flex;
-  gap: 4px;
-}
-
-.btn-move-tab,
-.btn-add-card,
-.btn-remove-tab {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-move-tab {
-  background-color: #17a2b8;
-  color: white;
-}
-
-.btn-move-tab:hover:not(:disabled) {
-  background-color: #138496;
-}
-
-.btn-move-tab:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.btn-add-card {
-  background-color: #007bff;
-  color: white;
-}
-
-.btn-add-card:hover {
-  background-color: #0056b3;
-}
-
-.btn-remove-tab {
-  background-color: #dc3545;
-  color: white;
-}
-
-.btn-remove-tab:hover {
-  background-color: #c82333;
-}
-
-.tab-content-preview {
-  padding: 20px;
-}
-
-.cards-count {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 16px;
-  font-weight: 500;
-}
-
-.cards-preview {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-}
-
-.card-preview {
-  display: flex;
-  flex-direction: column;
   gap: 8px;
-  padding: 12px;
-  border: 1px solid #e0e0e0;
+  margin-bottom: 15px;
+}
+
+.tab-edit-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.tab-edit-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
   border-radius: 6px;
-  background-color: #f8f9fa;
-  transition: all 0.2s;
-}
-
-.card-preview:hover {
-  border-color: #007bff;
-  background-color: #f0f8ff;
-}
-
-.card-preview .material-icons {
-  font-size: 20px;
-  color: #007bff;
-}
-
-.card-title {
   font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.tab-edit-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.tab-edit-input.error {
+  border-color: #dc3545;
+}
+
+.tab-edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.tab-cards {
+  background-color: white;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.tab-cards-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.tab-cards-title {
+  margin: 0;
+  font-size: 1rem;
   font-weight: 600;
   color: #333;
 }
 
-.card-items {
-  font-size: 12px;
+.tab-cards-count {
   color: #666;
-}
-
-.more-cards {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-  border: 1px dashed #ccc;
-  border-radius: 6px;
-  color: #666;
-  font-size: 12px;
-  font-style: italic;
-}
-
-.no-cards {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 40px 20px;
-  color: #999;
-  text-align: center;
-}
-
-.no-cards .material-icons {
-  font-size: 32px;
-  color: #ccc;
-}
-
-.no-cards span {
   font-size: 14px;
 }
 
-/* Layout-specific styles */
-.layout-singleDevice {
-  border-left: 4px solid #007bff;
+.cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.layout-horizontalLayout {
-  border-left: 4px solid #28a745;
+.card-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  transition: all 0.2s;
 }
 
-.layout-verticalLayout {
-  border-left: 4px solid #ffc107;
+.card-item:hover {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+.card-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.card-icon {
+  width: 32px;
+  height: 32px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.card-details {
+  flex: 1;
+}
+
+.card-title {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.card-layout {
+  font-size: 12px;
+  color: #666;
+}
+
+.card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.empty-tabs {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.empty-tabs-icon {
+  font-size: 48px;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.empty-tabs-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.empty-tabs-description {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #545b62;
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.btn-success:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid #007bff;
+  color: #007bff;
+}
+
+.btn-outline:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.btn-danger:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.btn-lg {
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.validation-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-size: 14px;
 }
 
 @media (max-width: 768px) {
-  .tab-manager {
-    padding: 16px;
-  }
-
   .tab-header {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    align-items: stretch;
+    gap: 15px;
+    padding: 15px;
   }
 
   .tab-actions {
-    width: 100%;
-    justify-content: space-between;
+    justify-content: center;
+  }
+
+  .tab-content {
+    padding: 15px;
+  }
+
+  .tab-header-info {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
   }
 
   .tab-controls {
-    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
-  .cards-preview {
-    grid-template-columns: 1fr;
+  .tab-edit-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tab-edit-actions {
+    justify-content: center;
+  }
+
+  .tab-cards-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .card-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .card-info {
+    justify-content: center;
+  }
+
+  .card-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-header {
+    padding: 10px;
+  }
+
+  .tab-content {
+    padding: 10px;
+  }
+
+  .tab-item {
+    padding: 15px;
+  }
+
+  .tab-controls {
+    flex-direction: column;
+  }
+
+  .tab-edit-actions {
+    flex-direction: column;
+  }
+
+  .card-item {
+    padding: 10px;
   }
 }

@@ -18,16 +18,13 @@ export class CardManagerComponent {
   private modalService = inject(ModalService);
   private validationService = inject(ValidationService);
 
-  // Signals
   isEditingCard = signal<string | null>(null);
   editingCardTitle = signal('');
   validationErrors = signal<Record<string, string>>({});
 
-  // Computed values
   tabs$ = this.dashboardStore.dashboardTabs$;
-  isEditMode$ = this.dashboardStore.isEditMode;
+  isEditMode = this.dashboardStore.isEditMode;
 
-  // Methods
   startEditCard(card: Card): void {
     this.isEditingCard.set(card.id);
     this.editingCardTitle.set(card.title || '');
@@ -72,7 +69,19 @@ export class CardManagerComponent {
   }
 
   openCardContent(tabId: string, cardId: string): void {
-    this.modalService.openCardContent(tabId, cardId);
+    let currentCard: import('../../models/dashboard.models').Card | null = null;
+    this.tabs$
+      .subscribe((tabs) => {
+        const tab = tabs.find((t) => t.id === tabId);
+        if (tab) {
+          currentCard = tab.cards.find((c) => c.id === cardId) || null;
+        }
+      })
+      .unsubscribe();
+
+    if (currentCard) {
+      this.modalService.showCardContentModal(currentCard, tabId);
+    }
   }
 
   getFieldError(field: string): string | null {

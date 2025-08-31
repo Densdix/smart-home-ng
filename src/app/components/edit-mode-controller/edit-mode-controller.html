@@ -1,5 +1,4 @@
 <div class="edit-mode-controller">
-  <!-- Status Bar -->
   <div class="status-bar" [class]="'status-' + getStatusColor()">
     <div class="status-info">
       <span class="material-icons status-icon">{{ getStatusIcon() }}</span>
@@ -7,24 +6,13 @@
     </div>
 
     <div class="status-actions">
-      <div *ngIf="dashboardError$()" class="error-indicator">
-        <span class="material-icons">warning</span>
-        <span>Ошибка загрузки</span>
-      </div>
-
-      <div *ngIf="dashboardLoading$()" class="loading-indicator">
-        <div class="spinner"></div>
-        <span>Загрузка...</span>
-      </div>
     </div>
   </div>
 
-  <!-- Control Buttons -->
   <div class="control-buttons">
-    <!-- Edit Mode Toggle -->
     <div class="edit-toggle">
       <button
-        *ngIf="!isEditMode$()"
+        *ngIf="!isEditMode()"
         type="button"
         class="btn-enter-edit"
         (click)="enterEditMode()"
@@ -35,7 +23,7 @@
       </button>
 
       <button
-        *ngIf="isEditMode$()"
+        *ngIf="isEditMode()"
         type="button"
         class="btn-exit-edit"
         (click)="exitEditMode()"
@@ -46,7 +34,6 @@
       </button>
     </div>
 
-    <!-- Save/Discard Actions -->
     <div class="save-actions" *ngIf="showSaveButton()">
       <button
         type="button"
@@ -69,7 +56,6 @@
       </button>
     </div>
 
-    <!-- Create New Dashboard -->
     <div class="create-actions">
       <button
         type="button"
@@ -83,7 +69,6 @@
     </div>
   </div>
 
-  <!-- Unsaved Changes Indicator -->
   <div *ngIf="showSaveButton()" class="unsaved-changes">
     <div class="changes-indicator">
       <span class="material-icons">warning</span>

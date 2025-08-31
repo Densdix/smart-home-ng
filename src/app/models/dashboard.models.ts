@@ -101,19 +101,21 @@ export interface EditModeState {
   hasUnsavedChanges: boolean;
 }
 
-export interface TabEditState {
-  [tabId: string]: {
+export type TabEditState = Record<
+  string,
+  {
     isEditing: boolean;
     originalTitle: string;
-  };
-}
+  }
+>;
 
-export interface CardEditState {
-  [cardId: string]: {
+export type CardEditState = Record<
+  string,
+  {
     isEditing: boolean;
     originalTitle: string;
-  };
-}
+  }
+>;
 
 // Layout Types
 export const CARD_LAYOUTS = {

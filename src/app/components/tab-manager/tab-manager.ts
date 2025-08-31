@@ -18,16 +18,13 @@ export class TabManagerComponent {
   private modalService = inject(ModalService);
   private validationService = inject(ValidationService);
 
-  // Signals
   isEditingTab = signal<string | null>(null);
   editingTabTitle = signal('');
   validationErrors = signal<Record<string, string>>({});
 
-  // Computed values
   tabs$ = this.dashboardStore.dashboardTabs$;
-  isEditMode$ = this.dashboardStore.isEditMode;
+  isEditMode = this.dashboardStore.isEditMode;
 
-  // Methods
   startEditTab(tab: Tab): void {
     this.isEditingTab.set(tab.id);
     this.editingTabTitle.set(tab.title);
@@ -48,7 +45,6 @@ export class TabManagerComponent {
       return;
     }
 
-    // Получаем список существующих названий вкладок для валидации
     this.tabs$
       .subscribe((tabs) => {
         const existingTitles = tabs
@@ -78,12 +74,10 @@ export class TabManagerComponent {
   addTab(): void {
     const newTitle = 'Новая вкладка';
 
-    // Получаем список существующих названий для валидации
     this.tabs$
       .subscribe((tabs) => {
         const existingTitles = tabs.map((t) => t.title);
 
-        // Генерируем уникальное название
         let uniqueTitle = newTitle;
         let counter = 1;
         while (existingTitles.includes(uniqueTitle)) {
@@ -105,7 +99,7 @@ export class TabManagerComponent {
   }
 
   openCardLayout(tabId: string): void {
-    this.modalService.openCardLayout(tabId);
+    this.modalService.showCardLayoutModal(tabId);
   }
 
   getFieldError(field: string): string | null {

@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { ValidationService } from '../../../services/validation.service';
 import { ModalService } from '../../../services/modal.service';
+import { DashboardListService } from '../../../services/dashboard-list.service';
 import {
   DashboardInfo,
   DASHBOARD_ICONS,
@@ -24,24 +25,21 @@ export class CreateDashboardModalComponent {
   private fb = inject(FormBuilder);
   private validationService = inject(ValidationService);
   private modalService = inject(ModalService);
+  private dashboardListService = inject(DashboardListService);
 
   isVisible = signal(false);
   isLoading = signal(false);
   validationErrors = signal<Record<string, string>>({});
 
   createForm: FormGroup;
-  availableIcons = DASHBOARD_ICONS;
+  availableIcons = DASHBOARD_ICONS.map((icon) => ({
+    value: icon,
+    label: this.getIconLabel(icon),
+  }));
 
   constructor() {
     this.createForm = this.fb.group({
-      id: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(30),
-          Validators.pattern(/^[\w-]+$/),
-        ],
-      ],
+      id: ['', [Validators.required, Validators.maxLength(30)]],
       title: ['', [Validators.required, Validators.maxLength(50)]],
       icon: ['home', [Validators.required]],
     });
@@ -53,7 +51,7 @@ export class CreateDashboardModalComponent {
   }
 
   hide(): void {
-    this.modalService.closeCreateDashboard();
+    this.modalService.closeCreateDashboardModal();
     this.isVisible.set(false);
     this.resetForm();
   }
@@ -74,6 +72,15 @@ export class CreateDashboardModalComponent {
     }
 
     const formValue = this.createForm.value;
+
+    const existingDashboards = this.dashboardListService.dashboards();
+    const existingIds = existingDashboards.map((d) => d.id);
+
+    if (existingIds.includes(formValue.id)) {
+      this.validationErrors.set({ id: 'Дашборд с таким ID уже существует' });
+      return;
+    }
+
     const validation = this.validationService.validateDashboardCreation(
       formValue.id,
       formValue.title,
@@ -121,5 +128,31 @@ export class CreateDashboardModalComponent {
   isFieldInvalid(field: string): boolean {
     const control = this.createForm.get(field);
     return !!(control && control.invalid && (control.dirty || control.touched));
+  }
+
+  private getIconLabel(icon: string): string {
+    const iconLabels: Record<string, string> = {
+      home: 'Дом',
+      dashboard: 'Дашборд',
+      settings: 'Настройки',
+      lightbulb: 'Освещение',
+      thermostat: 'Температура',
+      security: 'Безопасность',
+      camera: 'Камера',
+      wifi: 'Wi-Fi',
+      power: 'Питание',
+      water: 'Вода',
+      fire: 'Пожарная безопасность',
+      medical: 'Медицина',
+      car: 'Автомобиль',
+      garden: 'Сад',
+      kitchen: 'Кухня',
+      bedroom: 'Спальня',
+      living: 'Гостиная',
+      bathroom: 'Ванная',
+      garage: 'Гараж',
+      office: 'Офис',
+    };
+    return iconLabels[icon] || icon;
   }
 }
