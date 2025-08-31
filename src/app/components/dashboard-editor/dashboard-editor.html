@@ -1,0 +1,105 @@
+<div class="dashboard-editor">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="dashboard-info">
+      <div class="dashboard-icon">
+        <span class="material-icons">{{ getDashboardIcon() }}</span>
+      </div>
+      <div class="dashboard-details">
+        <h1 class="dashboard-title">{{ getDashboardTitle() }}</h1>
+        <div class="dashboard-stats">
+          <span class="stat-item">
+            <span class="material-icons">tab</span>
+            {{ getDashboardStats().tabs }} вкладок
+          </span>
+          <span class="stat-item">
+            <span class="material-icons">dashboard</span>
+            {{ getDashboardStats().cards }} карточек
+          </span>
+          <span class="stat-item">
+            <span class="material-icons">devices</span>
+            {{ getDashboardStats().items }} элементов
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Mode Controller -->
+  <app-edit-mode-controller></app-edit-mode-controller>
+
+  <!-- Loading State -->
+  <div *ngIf="dashboardLoading$ | async" class="loading-state">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Загрузка дашборда...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="dashboardError$ | async" class="error-state">
+    <div class="error-content">
+      <span class="material-icons">error</span>
+      <h3>Ошибка загрузки</h3>
+      <p>{{ dashboardError$ | async }}</p>
+      <button type="button" class="btn-retry">Повторить попытку</button>
+    </div>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="(selectedDashboard$ | async) && !(dashboardLoading$ | async) && !(dashboardError$ | async)" class="dashboard-content">
+    <!-- View Mode -->
+    <div *ngIf="showViewMode()" class="view-mode">
+      <div class="view-mode-content">
+        <div class="view-mode-info">
+          <span class="material-icons">visibility</span>
+          <h3>Режим просмотра</h3>
+          <p>Для редактирования дашборда нажмите кнопку "Редактировать" выше</p>
+        </div>
+
+        <!-- Dashboard Preview -->
+        <div class="dashboard-preview">
+          <div class="preview-tabs">
+            <div *ngFor="let tab of (selectedDashboard$ | async)?.tabs" class="preview-tab">
+              <h4>{{ tab.title }}</h4>
+              <div class="preview-cards">
+                <div *ngFor="let card of tab.cards" class="preview-card">
+                  <span class="material-icons">{{ card.title ? 'dashboard' : 'dashboard' }}</span>
+                  <span>{{ card.title || 'Без названия' }}</span>
+                  <span class="card-items">{{ card.items?.length || 0 }} элементов</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Mode -->
+    <div *ngIf="showEditComponents()" class="edit-mode">
+      <!-- Tab Manager -->
+      <app-tab-manager></app-tab-manager>
+
+      <!-- Card Manager -->
+      <app-card-manager></app-card-manager>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!(selectedDashboard$ | async) && !(dashboardLoading$ | async) && !(dashboardError$ | async)" class="empty-state">
+    <div class="empty-content">
+      <span class="material-icons">dashboard</span>
+      <h3>Дашборд не выбран</h3>
+      <p>Выберите существующий дашборд или создайте новый</p>
+      <button type="button" class="btn-create-dashboard" (click)="createNewDashboard()">
+        <span class="material-icons">add</span>
+        Создать дашборд
+      </button>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <app-create-dashboard-modal></app-create-dashboard-modal>
+  <app-card-layout-modal></app-card-layout-modal>
+  <app-card-content-modal></app-card-content-modal>
+</div>

@@ -1,0 +1,294 @@
+.edit-mode-controller {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+/* Status Bar */
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.status-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-icon {
+  font-size: 20px;
+}
+
+.status-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.status-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.error-indicator,
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #666;
+}
+
+.error-indicator {
+  color: #dc3545;
+}
+
+.loading-indicator {
+  color: #007bff;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Status Colors */
+.status-viewing {
+  background-color: #f8f9fa;
+  border-left: 4px solid #6c757d;
+}
+
+.status-editing {
+  background-color: #e3f2fd;
+  border-left: 4px solid #007bff;
+}
+
+.status-loading {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+}
+
+.status-error {
+  background-color: #f8d7da;
+  border-left: 4px solid #dc3545;
+}
+
+/* Control Buttons */
+.control-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  gap: 16px;
+}
+
+.edit-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-enter-edit,
+.btn-exit-edit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-enter-edit {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-enter-edit:hover {
+  background-color: #0056b3;
+}
+
+.btn-exit-edit {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-exit-edit:hover {
+  background-color: #545b62;
+}
+
+.save-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-save,
+.btn-discard {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-save {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #218838;
+}
+
+.btn-discard {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-discard:hover {
+  background-color: #c82333;
+}
+
+.create-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-create-dashboard {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-create-dashboard:hover {
+  background-color: #218838;
+}
+
+/* Unsaved Changes Indicator */
+.unsaved-changes {
+  background-color: #fff3cd;
+  border-top: 1px solid #ffeaa7;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.changes-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #856404;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.changes-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-save-changes,
+.btn-discard-changes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-save-changes {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-save-changes:hover {
+  background-color: #218838;
+}
+
+.btn-discard-changes {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-discard-changes:hover {
+  background-color: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .control-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .edit-toggle,
+  .save-actions,
+  .create-actions {
+    justify-content: center;
+  }
+
+  .unsaved-changes {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .changes-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .status-bar {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .status-actions {
+    justify-content: center;
+  }
+}

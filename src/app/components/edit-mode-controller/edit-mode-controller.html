@@ -1,0 +1,113 @@
+<div class="edit-mode-controller">
+  <!-- Status Bar -->
+  <div class="status-bar" [class]="'status-' + getStatusColor()">
+    <div class="status-info">
+      <span class="material-icons status-icon">{{ getStatusIcon() }}</span>
+      <span class="status-text">{{ getStatusText() }}</span>
+    </div>
+
+    <div class="status-actions">
+      <div *ngIf="dashboardError$()" class="error-indicator">
+        <span class="material-icons">warning</span>
+        <span>Ошибка загрузки</span>
+      </div>
+
+      <div *ngIf="dashboardLoading$()" class="loading-indicator">
+        <div class="spinner"></div>
+        <span>Загрузка...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Control Buttons -->
+  <div class="control-buttons">
+    <!-- Edit Mode Toggle -->
+    <div class="edit-toggle">
+      <button
+        *ngIf="!isEditMode$()"
+        type="button"
+        class="btn-enter-edit"
+        (click)="enterEditMode()"
+        title="Войти в режим редактирования"
+      >
+        <span class="material-icons">edit</span>
+        Редактировать
+      </button>
+
+      <button
+        *ngIf="isEditMode$()"
+        type="button"
+        class="btn-exit-edit"
+        (click)="exitEditMode()"
+        title="Выйти из режима редактирования"
+      >
+        <span class="material-icons">visibility</span>
+        Просмотр
+      </button>
+    </div>
+
+    <!-- Save/Discard Actions -->
+    <div class="save-actions" *ngIf="showSaveButton()">
+      <button
+        type="button"
+        class="btn-save"
+        (click)="saveDashboard()"
+        title="Сохранить изменения"
+      >
+        <span class="material-icons">save</span>
+        Сохранить
+      </button>
+
+      <button
+        type="button"
+        class="btn-discard"
+        (click)="discardChanges()"
+        title="Отменить изменения"
+      >
+        <span class="material-icons">undo</span>
+        Отменить
+      </button>
+    </div>
+
+    <!-- Create New Dashboard -->
+    <div class="create-actions">
+      <button
+        type="button"
+        class="btn-create-dashboard"
+        (click)="createNewDashboard()"
+        title="Создать новый дашборд"
+      >
+        <span class="material-icons">add</span>
+        Новый дашборд
+      </button>
+    </div>
+  </div>
+
+  <!-- Unsaved Changes Indicator -->
+  <div *ngIf="showSaveButton()" class="unsaved-changes">
+    <div class="changes-indicator">
+      <span class="material-icons">warning</span>
+      <span>Есть несохраненные изменения</span>
+    </div>
+
+    <div class="changes-actions">
+      <button
+        type="button"
+        class="btn-save-changes"
+        (click)="saveDashboard()"
+      >
+        <span class="material-icons">save</span>
+        Сохранить
+      </button>
+
+      <button
+        type="button"
+        class="btn-discard-changes"
+        (click)="discardChanges()"
+      >
+        <span class="material-icons">undo</span>
+        Отменить
+      </button>
+    </div>
+  </div>
+</div>
