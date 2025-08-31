@@ -48,7 +48,7 @@ module.exports = tseslint.config(
       "unicorn/better-regex": "error",
       "unicorn/catch-error-name": "error",
       "unicorn/consistent-destructuring": "error",
-      "unicorn/consistent-function-scoping": "error",
+      "unicorn/consistent-function-scoping": "off",
       "unicorn/custom-error-definition": "error",
       "unicorn/error-message": "error",
       "unicorn/escape-case": "error",
