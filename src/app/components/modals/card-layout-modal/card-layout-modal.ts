@@ -1,0 +1,72 @@
+import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CARD_LAYOUTS, CardLayout } from '../../../models/dashboard.models';
+import { ModalService } from '../../../services/modal.service';
+import { DashboardStore } from '../../../store/dashboard.store';
+
+@Component({
+  selector: 'app-card-layout-modal',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './card-layout-modal.html',
+  styleUrls: ['./card-layout-modal.css'],
+})
+export class CardLayoutModalComponent {
+  private modalService = inject(ModalService);
+  private dashboardStore = inject(DashboardStore);
+
+  isVisible = signal(false);
+  selectedLayout = signal<CardLayout | null>(null);
+
+  availableLayouts = [
+    {
+      id: CARD_LAYOUTS.SINGLE_DEVICE,
+      title: 'Одно устройство',
+      description: 'Карточка для отображения одного устройства или сенсора',
+      icon: 'smart_toy',
+    },
+    {
+      id: CARD_LAYOUTS.HORIZONTAL,
+      title: 'Горизонтальный макет',
+      description: 'Устройства и сенсоры располагаются в ряд',
+      icon: 'view_agenda',
+    },
+    {
+      id: CARD_LAYOUTS.VERTICAL,
+      title: 'Вертикальный макет',
+      description: 'Устройства и сенсоры располагаются в столбец',
+      icon: 'view_list',
+    },
+  ];
+
+  show(): void {
+    this.isVisible.set(true);
+    this.selectedLayout.set(null);
+  }
+
+  hide(): void {
+    this.modalService.closeCardLayoutModal();
+    this.isVisible.set(false);
+    this.selectedLayout.set(null);
+  }
+
+  selectLayout(layout: CardLayout): void {
+    this.selectedLayout.set(layout);
+  }
+
+  confirmSelection(): void {
+    const layout = this.selectedLayout();
+    const tabId = this.modalService.currentTabIdForCard();
+
+    if (layout && tabId) {
+      this.dashboardStore.addCard(tabId, layout);
+      this.hide();
+    }
+  }
+
+  getLayoutIcon(layoutId: string): string {
+    return (
+      this.availableLayouts.find((l) => l.id === layoutId)?.icon || 'dashboard'
+    );
+  }
+}

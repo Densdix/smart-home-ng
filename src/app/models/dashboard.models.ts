@@ -4,6 +4,7 @@ export interface SensorValue {
 }
 
 export interface Device {
+  id: string;
   type: 'device';
   icon: string;
   label: string;
@@ -11,6 +12,7 @@ export interface Device {
 }
 
 export interface Sensor {
+  id: string;
   type: 'sensor';
   icon: string;
   label: string;
@@ -56,3 +58,88 @@ export interface DashboardInfo {
   title: string;
   icon: string;
 }
+
+// CRUD Operation Models
+export interface CreateDashboardRequest {
+  id: string;
+  title: string;
+  icon: string;
+}
+
+export interface UpdateDashboardRequest {
+  tabs: Tab[];
+}
+
+export interface TabFormData {
+  title: string;
+}
+
+export interface CardFormData {
+  layout: 'singleDevice' | 'horizontalLayout' | 'verticalLayout';
+  title?: string;
+}
+
+export interface CardItemFormData {
+  itemId: string;
+}
+
+// Validation Models
+export interface ValidationError {
+  field: string;
+  message: string;
+}
+
+export interface FormValidationResult {
+  isValid: boolean;
+  errors: ValidationError[];
+}
+
+// UI State Models
+export interface EditModeState {
+  isActive: boolean;
+  originalData: DashboardData | null;
+  hasUnsavedChanges: boolean;
+}
+
+export type TabEditState = Record<
+  string,
+  {
+    isEditing: boolean;
+    originalTitle: string;
+  }
+>;
+
+export type CardEditState = Record<
+  string,
+  {
+    isEditing: boolean;
+    originalTitle: string;
+  }
+>;
+
+// Layout Types
+export const CARD_LAYOUTS = {
+  SINGLE_DEVICE: 'singleDevice',
+  HORIZONTAL: 'horizontalLayout',
+  VERTICAL: 'verticalLayout',
+} as const;
+
+export type CardLayout = (typeof CARD_LAYOUTS)[keyof typeof CARD_LAYOUTS];
+
+// Icon Options for Dashboards
+export const DASHBOARD_ICONS = [
+  'home',
+  'dashboard',
+  'settings',
+  'monitor',
+  'chart',
+  'analytics',
+  'control',
+  'smart_home',
+  'lightbulb',
+  'thermostat',
+  'security',
+  'energy',
+] as const;
+
+export type DashboardIcon = (typeof DASHBOARD_ICONS)[number];

@@ -1,0 +1,93 @@
+<div class="modal-overlay" *ngIf="isVisible()" (click)="hide()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Создать новый дашборд</h2>
+      <button class="close-btn" (click)="hide()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="general-error" *ngIf="getFieldError('general')">
+        {{ getFieldError('general') }}
+      </div>
+
+      <form [formGroup]="createForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="dashboardId">ID дашборда:</label>
+          <input
+            id="dashboardId"
+            type="text"
+            formControlName="id"
+            placeholder="Введите уникальный ID (например: my-dashboard)"
+            [class.error]="isFieldInvalid('id')"
+          />
+          <div class="error-message" *ngIf="getFieldError('id')">
+            {{ getFieldError('id') }}
+          </div>
+          <div class="form-hint">
+            ID должен быть уникальным и содержать только буквы, цифры и дефисы
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dashboardTitle">Название дашборда:</label>
+          <input
+            id="dashboardTitle"
+            type="text"
+            formControlName="title"
+            placeholder="Введите название дашборда"
+            [class.error]="isFieldInvalid('title')"
+          />
+          <div class="error-message" *ngIf="getFieldError('title')">
+            {{ getFieldError('title') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dashboardIcon">Иконка дашборда:</label>
+          <select
+            id="dashboardIcon"
+            formControlName="icon"
+            [class.error]="isFieldInvalid('icon')"
+          >
+            <option value="">Выберите иконку</option>
+            <option
+              *ngFor="let icon of availableIcons"
+              [value]="icon.value"
+            >
+              {{ icon.label }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="getFieldError('icon')">
+            {{ getFieldError('icon') }}
+          </div>
+
+          <div class="icon-selection" *ngIf="createForm.get('icon')?.value">
+            <label>Предварительный просмотр:</label>
+            <div class="icon-grid">
+              <div
+                class="icon-option selected"
+                [title]="createForm.get('icon')?.value"
+              >
+                <i class="material-icons">{{ createForm.get('icon')?.value }}</i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="hide()">
+            Отмена
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="createForm.invalid || isLoading()"
+          >
+            <span class="loading-spinner" *ngIf="isLoading()"></span>
+            {{ isLoading() ? 'Создание...' : 'Создать дашборд' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

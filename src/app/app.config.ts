@@ -5,9 +5,16 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { reducers } from './store';
+import { DashboardEffects } from './store/effects/dashboard.effects';
+import { DashboardListEffects } from './store/effects/dashboard-list.effects';
+import { DeviceEffects } from './store/effects/device.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,5 +22,14 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
+    provideStore(reducers),
+    provideEffects([DashboardEffects, DashboardListEffects, DeviceEffects]),
+    provideStoreDevtools({
+      maxAge: 25,
+      logOnly: false,
+      autoPause: true,
+      trace: false,
+      traceLimit: 75,
+    }),
   ],
 };

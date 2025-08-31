@@ -1,0 +1,155 @@
+<div class="card-manager" *ngIf="isEditMode()">
+  <div class="cards-container">
+    <div
+      *ngFor="let tab of tabs$ | async; trackBy: trackByTabId"
+      class="tab-section"
+    >
+      <h3 class="tab-title">{{ tab.title }}</h3>
+
+      <div class="cards-grid">
+        <div
+          *ngFor="let card of tab.cards; trackBy: trackByCardId; let cardIndex = index"
+          class="card-item"
+          [class.editing]="isCardEditing(card.id)"
+        >
+          <div class="card-header">
+            <div class="card-title-section">
+              <div *ngIf="!isCardEditing(card.id)" class="card-title">
+                {{ card.title || 'Без названия' }}
+              </div>
+
+              <div *ngIf="isCardEditing(card.id)" class="card-edit-form">
+                <input
+                  type="text"
+                  [value]="editingCardTitle()"
+                  (input)="editingCardTitle.set($any($event.target).value)"
+                  (keyup.enter)="saveCardTitle(card, tab.id)"
+                  (keyup.escape)="cancelEditCard()"
+                  class="card-title-input"
+                  [class.invalid]="getFieldError('title')"
+                  maxlength="50"
+                  placeholder="Введите название карточки"
+                />
+                <div class="error-message" *ngIf="getFieldError('title')">
+                  {{ getFieldError('title') }}
+                </div>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <button
+                *ngIf="!isCardEditing(card.id)"
+                type="button"
+                class="btn-edit-card"
+                (click)="startEditCard(card)"
+                title="Редактировать название"
+              >
+                <span class="material-icons">edit</span>
+              </button>
+
+              <div *ngIf="isCardEditing(card.id)" class="edit-actions">
+                <button
+                  type="button"
+                  class="btn-save-card"
+                  (click)="saveCardTitle(card, tab.id)"
+                  title="Сохранить"
+                >
+                  <span class="material-icons">check</span>
+                </button>
+                <button
+                  type="button"
+                  class="btn-cancel-card"
+                  (click)="cancelEditCard()"
+                  title="Отменить"
+                >
+                  <span class="material-icons">close</span>
+                </button>
+              </div>
+
+              <div class="card-controls">
+                <button
+                  type="button"
+                  class="btn-move-card"
+                  [disabled]="cardIndex === 0"
+                  (click)="reorderCard(tab.id, card.id, cardIndex - 1)"
+                  title="Переместить вверх"
+                >
+                  <span class="material-icons">keyboard_arrow_up</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="btn-move-card"
+                  [disabled]="cardIndex === tab.cards.length - 1"
+                  (click)="reorderCard(tab.id, card.id, cardIndex + 1)"
+                  title="Переместить вниз"
+                >
+                  <span class="material-icons">keyboard_arrow_down</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="btn-edit-content"
+                  (click)="openCardContent(tab.id, card.id)"
+                  title="Редактировать содержимое"
+                >
+                  <span class="material-icons">settings</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="btn-remove-card"
+                  (click)="removeCard(tab.id, card.id)"
+                  title="Удалить карточку"
+                >
+                  <span class="material-icons">delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-content-preview">
+            <div class="card-layout-info">
+              <span class="material-icons layout-icon">{{ getLayoutIcon(card.layout) }}</span>
+              <span class="layout-label">{{ getLayoutLabel(card.layout) }}</span>
+            </div>
+
+            <div class="card-items-info">
+              <div class="items-count">
+                {{ card.items.length }} элементов
+              </div>
+
+              <div class="items-preview" *ngIf="card.items.length > 0">
+                <div
+                  *ngFor="let item of card.items.slice(0, 3)"
+                  class="item-preview"
+                  [class]="'type-' + item.type"
+                >
+                  <span class="material-icons">{{ item.icon }}</span>
+                  <span class="item-label">{{ item.label }}</span>
+                </div>
+
+                <div *ngIf="card.items.length > 3" class="more-items">
+                  +{{ card.items.length - 3 }} ещё
+                </div>
+              </div>
+
+              <div *ngIf="card.items.length === 0" class="no-items">
+                <span class="material-icons">inbox</span>
+                <span>Нет элементов</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="tab.cards.length === 0" class="empty-tab">
+          <div class="empty-icon">
+            <span class="material-icons">add_card</span>
+          </div>
+          <p>В этой вкладке нет карточек</p>
+          <p class="empty-hint">Добавьте карточки, используя кнопку выше</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
