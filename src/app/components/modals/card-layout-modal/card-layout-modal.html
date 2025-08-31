@@ -1,0 +1,46 @@
+<div class="modal-overlay" *ngIf="isVisible()" (click)="hide()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Выберите макет карточки</h2>
+      <button class="close-button" (click)="hide()" type="button">
+        <span class="close-icon">×</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="layout-options">
+        <div
+          *ngFor="let layout of availableLayouts"
+          class="layout-option"
+          [class.selected]="selectedLayout() === layout.id"
+          (click)="selectLayout(layout.id)"
+        >
+          <div class="layout-icon">
+            <span class="material-icons">{{ layout.icon }}</span>
+          </div>
+          <div class="layout-info">
+            <h3>{{ layout.title }}</h3>
+            <p>{{ layout.description }}</p>
+          </div>
+          <div class="layout-preview">
+            <div class="preview-item" [class]="'preview-' + layout.id"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn-secondary" (click)="hide()">
+        Отмена
+      </button>
+      <button
+        type="button"
+        class="btn-primary"
+        [disabled]="!selectedLayout()"
+        (click)="confirmSelection()"
+      >
+        Выбрать
+      </button>
+    </div>
+  </div>
+</div>

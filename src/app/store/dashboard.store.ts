@@ -12,11 +12,9 @@ import { CardItem } from '../models/dashboard.models';
 export class DashboardStore {
   private store = inject(Store<AppState>);
 
-  // Signals для UI состояния
   private _isEditMode = signal(false);
   isEditMode = this._isEditMode.asReadonly();
 
-  // NgRx selectors
   selectedDashboard$ = this.store.select(
     DashboardSelectors.selectSelectedDashboard
   );
@@ -29,10 +27,8 @@ export class DashboardStore {
     DashboardSelectors.selectHasUnsavedChanges
   );
 
-  // Computed values
   isEditModeComputed = computed(() => this._isEditMode());
 
-  // Actions
   enterEditMode() {
     this._isEditMode.set(true);
     this.store.dispatch(DashboardActions.enterEditMode());

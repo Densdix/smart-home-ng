@@ -1,0 +1,107 @@
+<div class="modal-overlay" *ngIf="isVisible()" (click)="hide()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Редактировать карточку</h2>
+      <button class="close-button" (click)="hide()" type="button">
+        <span class="close-icon">×</span>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="currentCard">
+      <form [formGroup]="editForm" class="edit-form">
+        <div class="form-group">
+          <label for="cardTitle">Название карточки (необязательно)</label>
+          <div class="title-input-group">
+            <input
+              id="cardTitle"
+              type="text"
+              formControlName="title"
+              placeholder="Введите название карточки"
+              [class.invalid]="isFieldInvalid('title')"
+            />
+            <button type="button" class="btn-update" (click)="updateCardTitle()">
+              Обновить
+            </button>
+          </div>
+          <div class="error-message" *ngIf="getFieldError('title')">
+            {{ getFieldError('title') }}
+          </div>
+          <div class="field-info">
+            Максимум 50 символов
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="selectedItem">Добавить устройство или сенсор</label>
+          <div class="add-item-group">
+            <select
+              id="selectedItem"
+              formControlName="selectedItemId"
+              [class.invalid]="isFieldInvalid('selectedItemId')"
+            >
+              <option value="">Выберите элемент</option>
+              <option *ngFor="let item of availableDevices()" [value]="item.id">
+                {{ item.label }} ({{ getItemTypeLabel(item) }})
+              </option>
+            </select>
+            <button type="button" class="btn-add" (click)="addItemToCard()">
+              Добавить
+            </button>
+          </div>
+          <div class="error-message" *ngIf="getFieldError('selectedItemId')">
+            {{ getFieldError('selectedItemId') }}
+          </div>
+        </div>
+      </form>
+
+      <div class="current-items">
+        <h3>Текущие элементы ({{ currentCard.items.length }})</h3>
+
+        <div class="items-list" *ngIf="hasItems(); else emptyState">
+          <div *ngFor="let item of currentCard.items" class="item-card">
+            <div class="item-info">
+              <div class="item-icon">
+                <span class="material-icons">{{ getItemIcon(item) }}</span>
+              </div>
+              <div class="item-details">
+                <div class="item-label">{{ getItemLabel(item) }}</div>
+                <div class="item-type">{{ getItemTypeLabel(item) }}</div>
+                <div class="item-value" *ngIf="getItemValue(item)">
+                  {{ getItemValue(item) }}
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn-remove"
+              (click)="removeItemFromCard(item.id)"
+              title="Удалить элемент"
+            >
+              <span class="material-icons">delete</span>
+            </button>
+          </div>
+        </div>
+
+        <ng-template #emptyState>
+          <div class="empty-state">
+            <div class="empty-icon">
+              <span class="material-icons">inbox</span>
+            </div>
+            <p>Карточка пуста</p>
+            <p class="empty-hint">Добавьте устройства или сенсоры, используя форму выше</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <div class="error-message general-error" *ngIf="getFieldError('general')">
+        {{ getFieldError('general') }}
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn-secondary" (click)="hide()">
+        Закрыть
+      </button>
+    </div>
+  </div>
+</div>

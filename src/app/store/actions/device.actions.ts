@@ -1,7 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Device, Sensor } from '../../models/dashboard.models';
 
-// Device State Toggle Actions
 export const toggleDeviceState = createAction(
   '[Device] Toggle Device State',
   props<{ deviceId: string; newState: boolean }>()
@@ -17,7 +16,6 @@ export const toggleDeviceStateFailure = createAction(
   props<{ deviceId: string; error: string }>()
 );
 
-// Load Available Devices Actions
 export const loadAvailableDevices = createAction(
   '[Device] Load Available Devices'
 );

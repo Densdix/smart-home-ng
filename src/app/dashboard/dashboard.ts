@@ -112,7 +112,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     const tab = data.tabs.find((t) => t.id === currentTabId);
     if (!tab && data.tabs.length > 0) {
-      // Redirect to first available tab if current tab doesn't exist
       const firstTab = data.tabs[0];
       this.router.navigate(
         ['/dashboard', this.currentDashboardId(), firstTab.id],

@@ -9,7 +9,6 @@ import { Tab, Card } from '../../models/dashboard.models';
 export const dashboardReducer = createReducer(
   initialState,
 
-  // Edit Mode Actions
   on(DashboardActions.enterEditMode, (state) => ({
     ...state,
     isEditMode: true,
@@ -24,7 +23,6 @@ export const dashboardReducer = createReducer(
     dashboardSnapshot: null,
   })),
 
-  // Dashboard Loading Actions
   on(DashboardActions.loadDashboard, (state) => ({
     ...state,
     loading: true,
@@ -44,7 +42,6 @@ export const dashboardReducer = createReducer(
     error,
   })),
 
-  // Tab Management Actions
   on(DashboardActions.addTab, (state, { title }) => {
     if (!state.selectedDashboard) return state;
 
@@ -118,7 +115,6 @@ export const dashboardReducer = createReducer(
     };
   }),
 
-  // Card Management Actions
   on(DashboardActions.addCard, (state, { tabId, layout }) => {
     if (!state.selectedDashboard) return state;
 
@@ -201,7 +197,6 @@ export const dashboardReducer = createReducer(
     };
   }),
 
-  // Card Content Management Actions
   on(DashboardActions.addItemToCard, (state, { tabId, cardId, item }) => {
     if (!state.selectedDashboard) return state;
 
@@ -256,7 +251,6 @@ export const dashboardReducer = createReducer(
     }
   ),
 
-  // Save/Discard Actions
   on(DashboardActions.saveDashboardSuccess, (state) => ({
     ...state,
     isEditMode: false,
@@ -270,7 +264,6 @@ export const dashboardReducer = createReducer(
     dashboardSnapshot: null,
   })),
 
-  // Device State Update Actions
   on(DeviceActions.toggleDeviceStateSuccess, (state, { device }) => {
     if (!state.selectedDashboard) return state;
 

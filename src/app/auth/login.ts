@@ -32,7 +32,6 @@ export class LoginComponent {
       password: ['', [Validators.required]],
     });
 
-    // Redirect if already authenticated
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
     }
@@ -48,7 +47,6 @@ export class LoginComponent {
       this.authService.login(credentials).subscribe({
         next: () => {
           this.isLoading.set(false);
-          // Navigation is handled in AuthService
         },
         error: (error) => {
           this.isLoading.set(false);
